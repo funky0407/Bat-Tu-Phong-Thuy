@@ -1,0 +1,217 @@
+<title>Đối chiếu Bát Tự Phùng Gia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Noto+Serif:wght@600;700&display=swap">
+<style>
+/* Layout: báo cáo kiểm thử một cột — tóm tắt, kết luận, rồi bốn bảng đối chiếu cuộn ngang trong khung riêng */
+:root {
+  --bg: #fbf9f7; --surface: #ffffff; --ink: #231d1b; --muted: #6f625d; --line: #e6ddd7;
+  --accent: #9b2c1f; --ok: #2f7a4b; --ok-bg: #e5f2e9; --bad: #b4321f; --bad-bg: #fbe7e2; --warn: #9a6a12; --warn-bg: #fbf0d9;
+  --head: #f3ede8;
+  --f-display: 'Noto Serif', Georgia, serif;
+  --f-body: 'Be Vietnam Pro', 'Segoe UI', system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #171312; --surface: #201a19; --ink: #f0e8e4; --muted: #b1a39d; --line: #3a302d;
+  --accent: #e8836f; --ok: #7fd09c; --ok-bg: #1c3326; --bad: #ff8f7a; --bad-bg: #3d1f1a; --warn: #f0c46b; --warn-bg: #3a2f17; --head: #2a2220; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #171312; --surface: #201a19; --ink: #f0e8e4; --muted: #b1a39d; --line: #3a302d;
+  --accent: #e8836f; --ok: #7fd09c; --ok-bg: #1c3326; --bad: #ff8f7a; --bad-bg: #3d1f1a; --warn: #f0c46b; --warn-bg: #3a2f17; --head: #2a2220; color-scheme: dark }
+body { background: var(--bg); color: var(--ink); font: 15px/1.6 var(--f-body); }
+.wrap { max-width: 1180px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 56px; display: grid; gap: 28px; }
+h1, h2 { font-family: var(--f-display); text-wrap: balance; margin: 0; line-height: 1.25; }
+h1 { font-size: 1.85rem; color: var(--accent); }
+h2 { font-size: 1.25rem; }
+p { margin: 0; max-width: 72ch; }
+.sub { color: var(--muted); }
+header { display: grid; gap: 8px; }
+.eyebrow { font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; }
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; display: grid; gap: 2px; }
+.tile b { font-size: 1.5rem; font-variant-numeric: tabular-nums; }
+.tile span { font-size: .82rem; color: var(--muted); }
+.tile.ok b { color: var(--ok); } .tile.warn b { color: var(--warn); } .tile.bad b { color: var(--bad); }
+section { display: grid; gap: 12px; min-width: 0; }
+.findings { display: grid; gap: 10px; }
+.finding { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; display: grid; gap: 6px; }
+.finding h3 { margin: 0; font-size: 1rem; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.finding p { color: var(--ink); }
+.pill { font-size: .72rem; font-weight: 600; padding: 2px 8px; border-radius: 99px; letter-spacing: .03em; white-space: nowrap; }
+.pill.ok { background: var(--ok-bg); color: var(--ok); } .pill.bad { background: var(--bad-bg); color: var(--bad); } .pill.warn { background: var(--warn-bg); color: var(--warn); }
+.scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: .84rem; font-variant-numeric: tabular-nums; }
+th, td { padding: 7px 9px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; white-space: nowrap; }
+thead th { background: var(--head); font-weight: 600; font-size: .76rem; letter-spacing: .03em; color: var(--muted); position: sticky; top: 0; }
+tbody tr:last-child td { border-bottom: 0; }
+td.name { font-weight: 600; }
+td.name small { display: block; font-weight: 400; color: var(--muted); }
+.cmp { display: grid; gap: 1px; }
+.cmp .a { color: var(--ink); } .cmp .b { color: var(--muted); font-size: .78rem; }
+td.ok { background: color-mix(in srgb, var(--ok-bg) 55%, transparent); }
+td.bad { background: var(--bad-bg); }
+td.bad .a, td.bad .b { color: var(--bad); }
+td.warn { background: var(--warn-bg); }
+.tag { font-size: .7rem; color: var(--muted); }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: .8rem; color: var(--muted); }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -2px; margin-right: 4px; border: 1px solid var(--line); }
+.note { font-size: .82rem; color: var(--muted); }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Kiểm thử đối chiếu · 20 lá số ngẫu nhiên · Năm xem 2026</div>
+    <h1>App Bát Tự Phong Thủy so với Phong Thủy Phùng Gia</h1>
+    <p class="sub">Mỗi lá số được nhập cùng tên giả, giới tính, ngày giờ sinh (giờ Việt Nam) vào cả hai nơi. Cột của app được tính trực tiếp ngay trên trang này bằng chính mã nguồn của app; cột Phùng Gia là kết quả lấy từ phongthuyphunggia.com.vn/la-so-bat-tu ngày 12/10/2026.</p>
+  </header>
+
+  <div class="tiles" id="tiles"></div>
+
+  <section>
+    <h2>Kết luận chính</h2>
+    <div class="findings">
+      <div class="finding"><h3><span class="pill ok">Khớp</span> Phần lịch pháp gần như trùng hoàn toàn</h3>
+        <p>Tứ trụ, âm lịch, Thai nguyên, Mệnh cung, Trường sinh, Nạp âm và chuỗi can chi đại vận trùng nhau ở tất cả các ca, trừ một ca giờ Tý muộn nói ở dưới. Kể cả các ca biên như sinh sát giờ Lập Xuân (Bùi Gia Huy), sát Đại Tuyết (Đỗ Thanh Tâm), sinh năm 1949, 1959, 1965 và Tết Mậu Thân 1968.</p></div>
+      <div class="finding"><h3><span class="pill warn">Khác trường phái</span> Sinh sau 23 giờ: trụ ngày khác nhau</h3>
+        <p>Phạm Quốc Bảo sinh 23:30. Phùng Gia coi từ 23 giờ là sang ngày mới nên trụ ngày là Giáp Dần. App giữ ngày cũ theo phép “Tý muộn” nên trụ ngày là Quý Sửu; trụ giờ hai bên cùng là Giáp Tý. Cả hai cách đều có trong sách. Người Việt phổ biến hơn với cách của Phùng Gia, nên app có thể thêm một tùy chọn.</p></div>
+      <div class="finding"><h3><span class="pill bad">Lỗi phía Phùng Gia</span> Năm khởi vận lệch 10 năm khi sinh tháng Sửu, vận nghịch</h3>
+        <p>Đặng Ngọc Lan (25/01/1985) sinh vào tháng Sửu, đại vận đi nghịch. Phải đếm lùi về tiết Tiểu Hàn (05/01/1985), được 20 ngày, tức khoảng 6 năm 8 tháng, nên khởi vận năm 1991. Phùng Gia ra năm 2001, tương đương đếm lùi tới tận Đại Tuyết (đầu tháng 12), mâu thuẫn với chính trụ tháng Đinh Sửu họ hiển thị. Lá số mẫu 17/01/1994 thử thêm cũng bị y hệt (Phùng Gia ra 2007, đúng là 1997). Ở 19 ca còn lại năm khởi vận trùng nhau; ngày khởi vận của Phùng Gia sớm hơn 0 đến 31 ngày vì họ bỏ phần ngày lẻ khi quy đổi (3 ngày = 1 năm, 1 canh giờ = 10 ngày).</p></div>
+      <div class="finding"><h3><span class="pill warn">Khác phương pháp</span> Vượng nhược và Dụng thần thường ngược nhau</h3>
+        <p>Phùng Gia chấm “năng lượng nhật chủ” gần như chỉ bằng phần Tỷ Kiếp và coi nhẹ can lộ không có gốc. App cộng cả Ấn tinh lẫn Tỷ Kiếp làm lực hỗ trợ theo phép Phù ức kinh điển. Ví dụ Trần Minh Khang: nhật chủ Bính Hỏa, Mộc (Ấn) chiếm 70% theo chính số liệu Phùng Gia, nhưng Phùng Gia vẫn kết luận “nhược”, dùng Mộc, Hỏa. Theo Phù ức, Ấn nặng như vậy là thân vượng. Ngược lại, app chưa xét thông căn của thiên can, nên các ca can lộ không gốc (như Phan Thùy Dung có ba can Thủy) dễ bị chấm vượng quá tay. Phần này là mô hình ước lượng, không có đáp án tuyệt đối.</p></div>
+    </div>
+  </section>
+
+  <div class="legend"><span><i style="background:var(--ok-bg)"></i>Hai bên trùng nhau</span><span><i style="background:var(--warn-bg)"></i>Khác nhỏ hoặc khác trường phái</span><span><i style="background:var(--bad-bg)"></i>Khác nhau</span><span>Dòng trên: app · dòng dưới (chữ nhỏ): Phùng Gia</span></div>
+
+  <section>
+    <h2>1. Thông tin, âm lịch và tứ trụ</h2>
+    <div class="scroll"><table id="t1"></table></div>
+    <p class="note">App đánh dấu tháng nhuận (2001 nhuận tháng 4, 2020 nhuận tháng 4, 1990 nhuận tháng 5); Phùng Gia không hiển thị dấu này, ngày tháng số vẫn trùng.</p>
+  </section>
+
+  <section>
+    <h2>2. Trường sinh và nạp âm của bốn trụ</h2>
+    <div class="scroll"><table id="t2"></table></div>
+  </section>
+
+  <section>
+    <h2>3. Đại vận</h2>
+    <div class="scroll"><table id="t3"></table></div>
+  </section>
+
+  <section>
+    <h2>4. Ngũ hành, vượng nhược và Dụng thần</h2>
+    <div class="scroll"><table id="t4"></table></div>
+    <p class="note">Tỷ lệ ngũ hành của hai bên dùng cách cho điểm khác nhau nên không kỳ vọng trùng số. “Độ hỗ trợ” của app là Ấn + Tỷ Kiếp; con số của Phùng Gia là “mức năng lượng nhật chủ sở hữu” theo cách tính riêng của họ.</p>
+  </section>
+</div>
+
+<script src="js/vendor/lunar.js"></script>
+<script src="js/vi.js"></script>
+<script src="js/amlich.js"></script>
+<script src="js/shensha.js"></script>
+<script src="js/bazi.js"></script>
+<script>
+var PG = [
+{c:['Trần Minh Khang',1,1988,3,12,7,15],am:'25/01/1988',thai:'Bính Ngọ',menh:'Nhâm Tuất',tru:['Mậu Thìn','Ất Mão','Bính Dần','Nhâm Thìn'],ts:['Quan Đới','Mộc Dục','Trường Sinh','Quan Đới'],na:['Đại Lâm Mộc','Đại Khê Thủy','Lư Trung Hỏa','Trường Lưu Thủy'],khoi:'12/01/1996',van:['Bính Thìn','Đinh Tỵ','Mậu Ngọ','Kỷ Mùi'],nh:[69.63,11.02,16.83,0,2.52],nc:'nhược 14.5%',dung:'Mộc, Hỏa',ky:'Thủy, Kim'},
+{c:['Lê Thu Hà',0,1992,8,25,14,40],am:'27/07/1992',thai:'Kỷ Hợi',menh:'Nhâm Dần',tru:['Nhâm Thân','Mậu Thân','Quý Dậu','Kỷ Mùi'],ts:['Tử','Tử','Bệnh','Mộ'],na:['Kiếm Phong Kim','Đại Trạch Thổ','Kiếm Phong Kim','Thiên Thượng Hỏa'],khoi:'25/08/1998',van:['Đinh Mùi','Bính Ngọ','Ất Tỵ','Giáp Thìn'],nh:[0.76,3.19,22.81,53.53,19.71],nc:'nhược 15.1%',dung:'Kim, Thủy',ky:'Thổ, Hỏa'},
+{c:['Phạm Quốc Bảo',1,1975,11,3,23,30],am:'01/10/1975',thai:'Đinh Sửu',menh:'Quý Mùi',tru:['Ất Mão','Bính Tuất','Giáp Dần','Giáp Tý'],ts:['Đế Vượng','Dưỡng','Lâm Quan','Mộc Dục'],na:['Đại Khê Thủy','Ốc Thượng Thổ','Đại Khê Thủy','Hải Trung Kim'],khoi:'04/06/1984',van:['Ất Dậu','Giáp Thân','Quý Mùi','Nhâm Ngọ'],nh:[45.46,12.98,29.46,6.84,5.26],nc:'vượng 34.8%',dung:'Kim, Thổ, Hỏa',ky:'Thủy, Mộc'},
+{c:['Hoàng Mai Anh',0,2001,6,18,5,5],am:'27/04/2001',thai:'Ất Dậu',menh:'Bính Thân',tru:['Tân Tỵ','Giáp Ngọ','Nhâm Tý','Quý Mão'],ts:['Tuyệt','Thai','Đế Vượng','Tử'],na:['Bạch Lạp Kim','Sa Trung Kim','Tang Đố Mộc','Kim Bạch Kim'],khoi:'18/10/2007',van:['Ất Mùi','Bính Thân','Đinh Dậu','Mậu Tuất'],nh:[18,36.5,10.73,1.94,32.84],nc:'vượng 32.8%',dung:'Thổ, Hỏa, Mộc',ky:'Kim, Thủy'},
+{c:['Vũ Đức Thịnh',1,1965,4,9,10,20],am:'08/03/1965',thai:'Tân Mùi',menh:'Giáp Thân',tru:['Ất Tỵ','Canh Thìn','Quý Tỵ','Đinh Tỵ'],ts:['Thai','Dưỡng','Thai','Thai'],na:['Phú Đăng Hỏa','Bạch Lạp Kim','Trường Lưu Thủy','Sa Trung Thổ'],khoi:'09/08/1966',van:['Kỷ Mão','Mậu Dần','Đinh Sửu','Bính Tý'],nh:[21.86,51.23,3.47,11.1,12.34],nc:'nhược 13.6%',dung:'Kim, Thủy',ky:'Thổ, Hỏa'},
+{c:['Đặng Ngọc Lan',0,1985,1,25,18,45],am:'05/01/1985',thai:'Mậu Thìn',menh:'Tân Mùi',tru:['Giáp Tý','Đinh Sửu','Giáp Tý','Quý Dậu'],ts:['Mộc Dục','Quan Đới','Mộc Dục','Thai'],na:['Hải Trung Kim','Giản Hạ Thủy','Hải Trung Kim','Kiếm Phong Kim'],khoi:'25/07/2001',van:['Bính Tý','Ất Hợi','Giáp Tuất','Quý Dậu'],nh:[22.05,4.06,26.11,34.33,13.44],nc:'nhược 17.2%',dung:'Thủy, Mộc',ky:'Kim, Thổ'},
+{c:['Bùi Gia Huy',1,2000,2,4,20,30],am:'29/12/1999',thai:'Kỷ Tỵ',menh:'Tân Tỵ',tru:['Canh Thìn','Mậu Dần','Nhâm Thìn','Canh Tuất'],ts:['Mộ','Bệnh','Mộ','Quan Đới'],na:['Bạch Lạp Kim','Thành Đầu Thổ','Trường Lưu Thủy','Thoa Xuyến Kim'],khoi:'04/12/2009',van:['Kỷ Mão','Canh Thìn','Tân Tỵ','Nhâm Ngọ'],nh:[39.22,7.09,26.56,23.28,3.84],nc:'quá nhược 6.6%',dung:'Thổ, Mộc',ky:'Kim, Thủy'},
+{c:['Đỗ Thanh Tâm',0,1998,12,7,9,50],am:'19/10/1998',thai:'Giáp Dần',menh:'Ất Sửu',tru:['Mậu Dần','Quý Hợi','Mậu Tý','Đinh Tỵ'],ts:['Trường Sinh','Tuyệt','Thai','Lâm Quan'],na:['Thành Đầu Thổ','Đại Hải Thủy','Tích Lịch Hỏa','Sa Trung Thổ'],khoi:'07/09/2008',van:['Nhâm Tuất','Tân Dậu','Canh Thân','Kỷ Mùi'],nh:[14.98,14.98,3.42,1.97,64.65],nc:'quá nhược 4.3%',dung:'Mộc, Kim',ky:'Hỏa, Thổ'},
+{c:['Ngô Hải Đăng',1,1979,9,15,3,10],am:'24/07/1979',thai:'Giáp Tý',menh:'Canh Ngọ',tru:['Kỷ Mùi','Quý Dậu','Ất Dậu','Mậu Dần'],ts:['Dưỡng','Tuyệt','Tuyệt','Đế Vượng'],na:['Thiên Thượng Hỏa','Kiếm Phong Kim','Tuyền Trung Thủy','Thành Đầu Thổ'],khoi:'15/11/1981',van:['Nhâm Thân','Tân Mùi','Canh Ngọ','Kỷ Tỵ'],nh:[2.45,6.04,28.44,56.85,6.22],nc:'quá nhược 3.1%',dung:'Kim, Hỏa',ky:'Thủy, Mộc'},
+{c:['Dương Bích Ngọc',0,2010,10,8,12,0],am:'01/09/2010',thai:'Bính Tý',menh:'Mậu Dần',tru:['Canh Dần','Ất Dậu','Tân Mão','Giáp Ngọ'],ts:['Thai','Lâm Quan','Tuyệt','Bệnh'],na:['Tùng Bách Mộc','Tuyền Trung Thủy','Tùng Bách Mộc','Sa Trung Kim'],khoi:'08/11/2020',van:['Giáp Thân','Quý Mùi','Nhâm Ngọ','Tân Tỵ'],nh:[10.42,16.44,6.49,66.65,0],nc:'quá vượng 60.8%',dung:'Mộc',ky:'Thổ, Kim, Hỏa'},
+{c:['Lý Văn Phúc',1,1959,7,23,16,35],am:'18/06/1959',thai:'Nhâm Tuất',menh:'Bính Dần',tru:['Kỷ Hợi','Tân Mùi','Bính Ngọ','Bính Thân'],ts:['Tuyệt','Suy','Đế Vượng','Bệnh'],na:['Bình Địa Mộc','Lộ Bàng Thổ','Thiên Hà Thủy','Sơn Hạ Hỏa'],khoi:'23/09/1964',van:['Canh Ngọ','Kỷ Tỵ','Mậu Thìn','Đinh Mão'],nh:[5.58,28.18,43.81,16.19,6.23],nc:'vượng 28.2%',dung:'Thủy, Kim, Thổ',ky:'Mộc, Hỏa'},
+{c:['Hồ Khánh Linh',0,1995,5,6,0,20],am:'07/04/1995',thai:'Tân Mùi',menh:'Kỷ Sửu',tru:['Ất Hợi','Canh Thìn','Đinh Dậu','Canh Tý'],ts:['Thai','Suy','Trường Sinh','Tuyệt'],na:['Sơn Đầu Hỏa','Bạch Lạp Kim','Sơn Hạ Hỏa','Bích Thượng Thổ'],khoi:'06/06/1995',van:['Tân Tỵ','Nhâm Ngọ','Quý Mùi','Giáp Thân'],nh:[2.09,4.38,0,59.95,33.58],nc:'nhược cực 5.3%',dung:'Kim, Thổ',ky:'Hỏa, Mộc'},
+{c:['Mai Tuấn Kiệt',1,2005,3,21,21,55],am:'12/02/2005',thai:'Canh Ngọ',menh:'Kỷ Mão',tru:['Ất Dậu','Kỷ Mão','Giáp Thìn','Ất Hợi'],ts:['Thai','Đế Vượng','Suy','Trường Sinh'],na:['Tuyền Trung Thủy','Thành Đầu Thổ','Phú Đăng Hỏa','Sơn Đầu Hỏa'],khoi:'21/07/2010',van:['Mậu Dần','Đinh Sửu','Bính Tý','Ất Hợi'],nh:[81.81,0,0,10.95,7.24],nc:'quá vượng 77.9%',dung:'Thổ',ky:'Thủy, Mộc, Kim'},
+{c:['Tô Diệu Linh',0,1982,2,14,11,11],am:'21/01/1982',thai:'Quý Tỵ',menh:'Kỷ Dậu',tru:['Nhâm Tuất','Nhâm Dần','Mậu Thìn','Mậu Ngọ'],ts:['Mộ','Trường Sinh','Quan Đới','Đế Vượng'],na:['Đại Hải Thủy','Kim Bạch Kim','Đại Lâm Mộc','Thiên Thượng Hỏa'],khoi:'14/06/1985',van:['Tân Sửu','Canh Tý','Kỷ Hợi','Mậu Tuất'],nh:[33.69,22.46,27.32,9.39,7.14],nc:'vượng 27.3%',dung:'Mộc, Thủy, Kim',ky:'Hỏa, Thổ'},
+{c:['Cao Minh Trí',1,1970,1,1,6,0],am:'24/11/1969',thai:'Đinh Mão',menh:'Bính Dần',tru:['Kỷ Dậu','Bính Tý','Tân Tỵ','Tân Mão'],ts:['Lâm Quan','Trường Sinh','Tử','Tuyệt'],na:['Đại Trạch Thổ','Giản Hạ Thủy','Bạch Lạp Kim','Tùng Bách Mộc'],khoi:'01/03/1978',van:['Ất Hợi','Giáp Tuất','Quý Dậu','Nhâm Thân'],nh:[15.15,2.8,6.57,51,24.48],nc:'vượng 40.9%',dung:'Hỏa, Mộc, Thủy',ky:'Thổ, Kim'},
+{c:['Lâm Phương Thảo',0,2020,5,30,8,25],am:'08/04/2020',thai:'Nhâm Thân',menh:'Giáp Thân',tru:['Canh Tý','Tân Tỵ','Quý Dậu','Bính Thìn'],ts:['Lâm Quan','Thai','Bệnh','Dưỡng'],na:['Bích Thượng Thổ','Bạch Lạp Kim','Kiếm Phong Kim','Sa Trung Thổ'],khoi:'30/09/2028',van:['Canh Thìn','Kỷ Mão','Mậu Dần','Đinh Sửu'],nh:[8.69,26.25,29.44,18.69,16.92],nc:'nhược 14.6%',dung:'Kim, Thủy',ky:'Thổ, Hỏa'},
+{c:['Trịnh Hoàng Nam',1,1968,2,5,13,45],am:'08/01/1968',thai:'Ất Tỵ',menh:'Canh Thân',tru:['Mậu Thân','Giáp Dần','Ất Tỵ','Quý Mùi'],ts:['Thai','Đế Vượng','Mộc Dục','Dưỡng'],na:['Đại Trạch Thổ','Đại Khê Thủy','Phú Đăng Hỏa','Dương Liễu Mộc'],khoi:'05/10/1977',van:['Ất Mão','Bính Thìn','Đinh Tỵ','Mậu Ngọ'],nh:[49.31,26.71,10.01,10.29,3.68],nc:'vượng 48.7%',dung:'Kim, Thổ, Hỏa',ky:'Thủy, Mộc'},
+{c:['Phan Thùy Dung',0,1990,7,7,19,30],am:'15/05/1990',thai:'Giáp Tuất',menh:'Mậu Tý',tru:['Canh Ngọ','Quý Mùi','Quý Dậu','Nhâm Tuất'],ts:['Tuyệt','Mộ','Bệnh','Suy'],na:['Lộ Bàng Thổ','Dương Liễu Mộc','Kiếm Phong Kim','Đại Hải Thủy'],khoi:'07/07/1990',van:['Nhâm Ngọ','Tân Tỵ','Canh Thìn','Kỷ Mão'],nh:[4.66,53.6,30.3,7.72,3.73],nc:'nhược cực 4.1%',dung:'Hỏa, Mộc',ky:'Thủy, Kim'},
+{c:['Kiều Anh Tuấn',1,2015,11,22,22,15],am:'11/10/2015',thai:'Mậu Dần',menh:'Quý Mùi',tru:['Ất Mùi','Đinh Hợi','Nhâm Dần','Tân Hợi'],ts:['Dưỡng','Lâm Quan','Bệnh','Lâm Quan'],na:['Sa Trung Kim','Ốc Thượng Thổ','Kim Bạch Kim','Thoa Xuyến Kim'],khoi:'22/10/2020',van:['Bính Tuất','Ất Dậu','Giáp Thân','Quý Mùi'],nh:[61.41,0.96,5.78,1.16,30.69],nc:'vượng 31%',dung:'Thổ, Hỏa, Mộc',ky:'Kim, Thủy'},
+{c:['Đinh Hạnh Nguyên',0,1949,10,1,4,40],am:'10/08/1949',thai:'Giáp Tý',menh:'Canh Ngọ',tru:['Kỷ Sửu','Quý Dậu','Giáp Tý','Bính Dần'],ts:['Quan Đới','Thai','Mộc Dục','Lâm Quan'],na:['Tích Lịch Hỏa','Kiếm Phong Kim','Hải Trung Kim','Lư Trung Hỏa'],khoi:'01/04/1952',van:['Giáp Tuất','Ất Hợi','Bính Tý','Đinh Sửu'],nh:[2.25,12.65,25.87,27.8,31.43],nc:'quá nhược 5.1%',dung:'Kim, Hỏa',ky:'Thủy, Mộc'}];
+
+var G = BT.GAN, Z = BT.ZHI, H = BT.HANH, TRU = ['Năm', 'Tháng', 'Ngày', 'Giờ'];
+function gz(g, z) { return G[g] + ' ' + Z[z]; }
+function p2(n) { return (n < 10 ? '0' : '') + n; }
+function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+function cell(a, b, cls) {
+  if (cls == null) cls = a === b ? 'ok' : 'bad';
+  return '<td class="' + cls + '"><div class="cmp"><span class="a">' + esc(a) + '</span>' + (a === b ? '' : '<span class="b">' + esc(b) + '</span>') + '</div></td>';
+}
+function ngay(s) { var p = s.split('/'); return Date.UTC(+p[2], +p[1] - 1, +p[0]); }
+function ds(s) { return s.split(', ').map(function (x) { return x.trim(); }); }
+
+var rows = PG.map(function (x) {
+  var c = x.c, ch = BT.lapLaSo({ name: c[0], gender: c[1], y: c[2], m: c[3], d: c[4], h: c[5], mi: c[6] });
+  var t = [ch.tru[5], ch.tru[4], ch.tru[3], ch.tru[2]], kv = ch.khoiVan.ngayDL.split('-'), dt = ch.dungThan;
+  return { x: x, ch: ch,
+    am: p2(ch.amLich.d) + '/' + p2(ch.amLich.m) + '/' + ch.amLich.y, nhuan: ch.amLich.nhuan,
+    thai: gz(ch.tru[0].g, ch.tru[0].z), menh: gz(ch.tru[1].g, ch.tru[1].z),
+    tru: t.map(function (p) { return gz(p.g, p.z); }), ts: t.map(function (p) { return BT.TRUONG_SINH[p.ts]; }), na: t.map(function (p) { return p.napAm; }),
+    khoi: kv[2] + '/' + kv[1] + '/' + kv[0], van: ch.daiVan.slice(0, 4).map(function (v) { return gz(v.g, v.z); }),
+    tot: [dt.D].concat(dt.ds.filter(function (q) { return q.vai === 1; }).map(function (q) { return q.e; })).map(function (e) { return H[e]; }),
+    ky: dt.ds.filter(function (q) { return q.vai === 2 || q.vai === 3; }).map(function (q) { return H[q.e]; }) };
+});
+function who(r) { var c = r.x.c; return '<td class="name">' + esc(c[0]) + '<small>' + (c[1] ? 'Nam' : 'Nữ') + ' · ' + p2(c[5]) + ':' + p2(c[6]) + ' ' + p2(c[4]) + '/' + p2(c[3]) + '/' + c[2] + '</small></td>'; }
+
+// Bảng 1
+var ok = { tru: 0, am: 0, thai: 0, ts: 0, van: 0, khoiNam: 0, dung: 0 };
+document.getElementById('t1').innerHTML = '<thead><tr><th>Lá số</th><th>Âm lịch</th>' + TRU.map(function (n) { return '<th>Trụ ' + n.toLowerCase() + '</th>'; }).join('') + '<th>Thai nguyên</th><th>Mệnh cung</th></tr></thead><tbody>' +
+  rows.map(function (r) {
+    var x = r.x, giu = r.tru.join() === x.tru.join();
+    if (giu) ok.tru++; if (r.am === x.am) ok.am++; if (r.thai === x.thai && r.menh === x.menh) ok.thai++;
+    return '<tr>' + who(r) + cell(r.am + (r.nhuan ? ' (nhuận)' : ''), x.am, r.am === x.am ? 'ok' : 'bad') +
+      r.tru.map(function (v, i) { return cell(v, x.tru[i], v === x.tru[i] ? 'ok' : (i === 2 && x.c[5] === 23 ? 'warn' : 'bad')); }).join('') +
+      cell(r.thai, x.thai) + cell(r.menh, x.menh) + '</tr>';
+  }).join('') + '</tbody>';
+
+// Bảng 2
+document.getElementById('t2').innerHTML = '<thead><tr><th>Lá số</th>' + TRU.map(function (n) { return '<th>Trường sinh ' + n.toLowerCase() + '</th>'; }).join('') + TRU.map(function (n) { return '<th>Nạp âm ' + n.toLowerCase() + '</th>'; }).join('') + '</tr></thead><tbody>' +
+  rows.map(function (r) {
+    var x = r.x, giu = x.c[5] === 23;
+    if (r.ts.join() === x.ts.join() && r.na.join() === x.na.join()) ok.ts++;
+    function c2(a, b) { return cell(a, b, a === b ? 'ok' : giu ? 'warn' : 'bad'); }
+    return '<tr>' + who(r) + r.ts.map(function (v, i) { return c2(v, x.ts[i]); }).join('') + r.na.map(function (v, i) { return c2(v, x.na[i]); }).join('') + '</tr>';
+  }).join('') + '</tbody>';
+
+// Bảng 3
+document.getElementById('t3').innerHTML = '<thead><tr><th>Lá số</th><th>Chiều</th><th>Ngày khởi vận</th><th>Chênh</th>' + [1, 2, 3, 4].map(function (i) { return '<th>Vận ' + i + '</th>'; }).join('') + '</tr></thead><tbody>' +
+  rows.map(function (r) {
+    var x = r.x, chenh = Math.round((ngay(r.khoi) - ngay(x.khoi)) / 864e5), cungNam = r.khoi.slice(-4) === x.khoi.slice(-4);
+    if (cungNam) ok.khoiNam++; if (r.van.join() === x.van.join()) ok.van++;
+    var nhan = chenh === 0 ? 'Trùng' : Math.abs(chenh) > 365 ? Math.round(chenh / 365.25) + ' năm' : (chenh > 0 ? '+' : '') + chenh + ' ngày';
+    return '<tr>' + who(r) + '<td>' + (r.ch.khoiVan.thuan ? 'Thuận' : 'Nghịch') + '</td>' +
+      cell(r.khoi, x.khoi, chenh === 0 ? 'ok' : cungNam ? 'warn' : 'bad') +
+      '<td class="' + (chenh === 0 ? 'ok' : cungNam ? 'warn' : 'bad') + '">' + nhan + '</td>' +
+      r.van.map(function (v, i) { return cell(v, x.van[i]); }).join('') + '</tr>';
+  }).join('') + '</tbody>';
+
+// Bảng 4
+document.getElementById('t4').innerHTML = '<thead><tr><th>Lá số</th><th>Nhật chủ</th>' + H.map(function (h) { return '<th>' + h + '</th>'; }).join('') + '<th>Vượng / nhược</th><th>Hành có lợi</th><th>Hành bất lợi</th><th>Đánh giá</th></tr></thead><tbody>' +
+  rows.map(function (r) {
+    var x = r.x, nh = r.ch.nguHanh, pgTot = ds(x.dung), pgKy = ds(x.ky);
+    var dungChung = pgTot.indexOf(r.tot[0]) >= 0, nguoc = pgTot.indexOf(r.tot[0]) < 0 && pgTot.every(function (e) { return r.ky.indexOf(e) >= 0; });
+    var muc = dungChung ? ['Đồng thuận', 'ok'] : nguoc ? ['Ngược nhau', 'bad'] : ['Lệch một phần', 'warn'];
+    if (dungChung) ok.dung++;
+    return '<tr>' + who(r) + '<td>' + G[r.ch.dg] + ' ' + H[BT.ganHanh(r.ch.dg)] + '</td>' +
+      nh.pct.map(function (v, e) { return '<td><div class="cmp"><span class="a">' + v.toFixed(1) + '%</span><span class="b">' + x.nh[e] + '%</span></div></td>'; }).join('') +
+      '<td><div class="cmp"><span class="a">' + nh.ketLuan + ' · ' + nh.hoTro.toFixed(1) + '%</span><span class="b">' + esc(x.nc) + '</span></div></td>' +
+      '<td><div class="cmp"><span class="a">' + r.tot[0] + ' (Dụng)' + (r.tot.length > 1 ? ', ' + r.tot.slice(1).join(', ') + ' (Hỷ)' : '') + '</span><span class="b">' + esc(x.dung) + '</span></div></td>' +
+      '<td><div class="cmp"><span class="a">' + r.ky.join(', ') + '</span><span class="b">' + esc(x.ky) + '</span></div></td>' +
+      '<td class="' + muc[1] + '">' + muc[0] + '</td></tr>';
+  }).join('') + '</tbody>';
+
+var n = rows.length;
+function tile(v, label, cls) { return '<div class="tile ' + cls + '"><b>' + v + '/' + n + '</b><span>' + label + '</span></div>'; }
+document.getElementById('tiles').innerHTML =
+  tile(ok.tru, 'Tứ trụ trùng khớp', ok.tru === n ? 'ok' : 'warn') +
+  tile(ok.am, 'Ngày âm lịch trùng', ok.am === n ? 'ok' : 'warn') +
+  tile(ok.thai, 'Thai nguyên và Mệnh cung trùng', ok.thai === n ? 'ok' : 'warn') +
+  tile(ok.ts, 'Trường sinh và Nạp âm trùng', ok.ts === n ? 'ok' : 'warn') +
+  tile(ok.van, 'Chuỗi đại vận trùng', ok.van === n ? 'ok' : 'warn') +
+  tile(ok.khoiNam, 'Năm khởi vận trùng', ok.khoiNam === n ? 'ok' : 'warn') +
+  tile(ok.dung, 'Dụng thần của app nằm trong nhóm có lợi của Phùng Gia', 'bad');
+</script>

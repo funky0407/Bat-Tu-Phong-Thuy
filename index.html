@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bát Tự Phong Thủy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Noto+Serif:wght@400;600;700&display=swap&subset=vietnamese">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap&text=%E7%94%B2%E4%B9%99%E4%B8%99%E4%B8%81%E6%88%8A%E5%B7%B1%E5%BA%9A%E8%BE%9B%E5%A3%AC%E7%99%B8%E5%AD%90%E4%B8%91%E5%AF%85%E5%8D%AF%E8%BE%B0%E5%B7%B3%E5%8D%88%E6%9C%AA%E7%94%B3%E9%85%89%E6%88%8C%E4%BA%A5%E5%91%BD">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="wrap" id="vung-in">
+  <header class="dau">
+    <div class="an-trien" aria-hidden="true">命</div>
+    <div>
+      <h1>Bát Tự Phong Thủy</h1>
+      <p>Tứ trụ · Đại vận · Lưu niên — tính theo tiết khí, giờ Việt Nam</p>
+    </div>
+    <div class="cong-cu">
+      <button type="button" class="nut chinh" id="nut-ho-so">Xuất hồ sơ PDF</button>
+      <button type="button" class="nut" id="nut-in">In lá số</button>
+      <button type="button" class="nut" id="nut-anh">Tải ảnh PNG</button>
+    </div>
+  </header>
+
+  <section class="giay" id="khung-nhap">
+    <div class="bang-ten">Lá số <button type="button" class="nut nut-nho phai" id="nut-sua" aria-expanded="false" aria-controls="form-nhap">Sửa thông tin</button></div>
+    <div class="tom-tat" id="tom-tat"></div>
+    <form class="nhap" id="form-nhap" autocomplete="off" hidden>
+      <label class="ho-ten">Họ và tên<input id="ten" name="ten" type="text" placeholder="Ví dụ: Nguyễn Văn An"></label>
+      <label>Giới tính<select id="gioitinh" name="gioitinh"><option value="1">Nam</option><option value="0">Nữ</option></select></label>
+      <label>Ngày sinh (dương lịch)<input id="ngay" name="ngay" type="date" min="1900-01-01" max="2100-12-31" required></label>
+      <label>Giờ sinh<input id="gio" name="gio" type="time" required></label>
+      <label class="rong">Biệt danh (dùng trong hồ sơ)<input id="bietdanh" name="bietdanh" type="text" placeholder="Ví dụ: Sói"></label>
+      <label class="rong">Người luận giải (chân trang hồ sơ)<input id="nguoiluan" name="nguoiluan" type="text" placeholder="Ví dụ: Tít Nguyễn"></label>
+      <button type="submit" class="nut chinh">Lập lá số</button>
+    </form>
+    <p id="loi" role="alert" style="color:var(--hoa);margin:8px 0 0;font-size:.88rem"></p>
+  </section>
+
+
+  <nav class="tabs" role="tablist">
+    <button type="button" role="tab" data-tab="ban-menh" aria-selected="true">Bản mệnh</button>
+    <button type="button" role="tab" data-tab="dai-van" aria-selected="false">Đại vận</button>
+    <button type="button" role="tab" data-tab="luu-nien" aria-selected="false">Lưu niên</button>
+  </nav>
+
+  <main>
+    <div class="trang" id="trang-ban-menh"></div>
+    <div class="trang" id="trang-dai-van" hidden></div>
+    <div class="trang" id="trang-luu-nien" hidden></div>
+  </main>
+
+</div>
+
+<div id="ho-so" hidden>
+  <div class="hs-cong-cu">
+    <button type="button" class="nut" id="hs-quay-lai">← Quay lại lá số</button>
+    <span class="hs-goi-y">Bấm vào bất kỳ chữ nào để sửa trực tiếp. Khi in, chọn máy in "Lưu dưới dạng PDF".</span>
+    <button type="button" class="nut" id="hs-tao-lai">Tạo lại nội dung</button>
+    <button type="button" class="nut chinh" id="hs-in">In / Lưu PDF</button>
+  </div>
+  <article class="hs-to" id="hs-noi-dung" contenteditable="true" spellcheck="false"></article>
+</div>
+<style id="hs-trang-in"></style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="js/vendor/lunar.js"></script>
+<script src="js/vi.js"></script>
+<script src="js/amlich.js"></script>
+<script src="js/shensha.js"></script>
+<script src="js/giainghia.js"></script>
+<script src="js/bazi.js"></script>
+<script src="js/hoso-van.js"></script>
+<script src="js/hoso.js"></script>
+<script src="js/render.js"></script>
+</body>
+</html>

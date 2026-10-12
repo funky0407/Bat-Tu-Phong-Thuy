@@ -1,0 +1,226 @@
+<title>Đối chiếu lá số Haze</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Noto+Serif:wght@600;700&display=swap">
+<style>
+/* Layout: báo cáo một cột — cảnh báo ngày sinh, tóm tắt, rồi các bảng đối chiếu app (dòng trên) với PDF Phùng Gia (dòng dưới) */
+:root {
+  --bg: #fbf9f7; --surface: #ffffff; --ink: #231d1b; --muted: #6f625d; --line: #e6ddd7;
+  --accent: #9b2c1f; --ok: #2f7a4b; --ok-bg: #e5f2e9; --bad: #b4321f; --bad-bg: #fbe7e2; --warn: #9a6a12; --warn-bg: #fbf0d9;
+  --head: #f3ede8;
+  --moc: #2e7d3b; --hoa: #c0291d; --tho: #9a6e12; --kim: #66615e; --thuy: #2558a8;
+  --f-display: 'Noto Serif', Georgia, serif;
+  --f-body: 'Be Vietnam Pro', 'Segoe UI', system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #171312; --surface: #201a19; --ink: #f0e8e4; --muted: #b1a39d; --line: #3a302d;
+  --accent: #e8836f; --ok: #7fd09c; --ok-bg: #1c3326; --bad: #ff8f7a; --bad-bg: #3d1f1a; --warn: #f0c46b; --warn-bg: #3a2f17; --head: #2a2220;
+  --moc: #6fcf7f; --hoa: #ff7a66; --tho: #e5b03a; --kim: #bdb6b2; --thuy: #77aef5; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #171312; --surface: #201a19; --ink: #f0e8e4; --muted: #b1a39d; --line: #3a302d;
+  --accent: #e8836f; --ok: #7fd09c; --ok-bg: #1c3326; --bad: #ff8f7a; --bad-bg: #3d1f1a; --warn: #f0c46b; --warn-bg: #3a2f17; --head: #2a2220;
+  --moc: #6fcf7f; --hoa: #ff7a66; --tho: #e5b03a; --kim: #bdb6b2; --thuy: #77aef5; color-scheme: dark }
+body { background: var(--bg); color: var(--ink); font: 15px/1.6 var(--f-body); }
+.wrap { max-width: 1080px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 56px; display: grid; gap: 26px; }
+h1, h2 { font-family: var(--f-display); text-wrap: balance; margin: 0; line-height: 1.25; }
+h1 { font-size: 1.8rem; color: var(--accent); }
+h2 { font-size: 1.22rem; }
+h3 { margin: 0; font-size: 1rem; }
+p { margin: 0; max-width: 74ch; }
+.sub { color: var(--muted); }
+header { display: grid; gap: 8px; }
+.eyebrow { font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.alert { border: 1px solid var(--bad); background: var(--bad-bg); border-radius: 8px; padding: 14px 16px; display: grid; gap: 6px; }
+.alert h3 { color: var(--bad); }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; }
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; display: grid; gap: 2px; align-content: start; }
+.tile b { font-size: 1.05rem; }
+.tile span { font-size: .82rem; color: var(--muted); }
+.tile.ok b { color: var(--ok); } .tile.warn b { color: var(--warn); } .tile.bad b { color: var(--bad); }
+section { display: grid; gap: 12px; min-width: 0; }
+.scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: .86rem; font-variant-numeric: tabular-nums; }
+th, td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+thead th { background: var(--head); font-weight: 600; font-size: .76rem; letter-spacing: .03em; color: var(--muted); white-space: nowrap; }
+tbody th { font-weight: 600; white-space: nowrap; background: color-mix(in srgb, var(--head) 50%, transparent); }
+tbody tr:last-child td, tbody tr:last-child th { border-bottom: 0; }
+.cmp { display: grid; gap: 2px; }
+.cmp .b { color: var(--muted); font-size: .8rem; }
+.cmp .b::before { content: 'PG: '; font-weight: 600; }
+td.ok { background: color-mix(in srgb, var(--ok-bg) 55%, transparent); }
+td.bad { background: var(--bad-bg); }
+td.warn { background: var(--warn-bg); }
+.moc { color: var(--moc); } .hoa { color: var(--hoa); } .tho { color: var(--tho); } .kim { color: var(--kim); } .thuy { color: var(--thuy); }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: .8rem; color: var(--muted); }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -2px; margin-right: 4px; border: 1px solid var(--line); }
+.bar { display: grid; grid-template-columns: 4.2em 1fr 3.6em; gap: 8px; align-items: center; font-size: .82rem; }
+.bar .t { height: 8px; border-radius: 4px; background: var(--line); overflow: hidden; }
+.bar .t span { display: block; height: 100%; background: currentColor; }
+.bars { display: grid; gap: 6px; }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; display: grid; gap: 10px; min-width: 0; }
+.card h3 small { font-weight: 400; color: var(--muted); }
+.pill { font-size: .72rem; font-weight: 600; padding: 2px 8px; border-radius: 99px; white-space: nowrap; }
+.pill.ok { background: var(--ok-bg); color: var(--ok); } .pill.bad { background: var(--bad-bg); color: var(--bad); } .pill.warn { background: var(--warn-bg); color: var(--warn); }
+.findings { display: grid; gap: 10px; }
+.finding { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; display: grid; gap: 6px; }
+.finding h3 { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; }
+.note { font-size: .82rem; color: var(--muted); }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Đối chiếu một lá số · Nữ · 05:09 ngày 07/03/2020 (dương lịch)</div>
+    <h1>Lá số Haze: app Bát Tự Phong Thủy so với PDF Phùng Gia</h1>
+    <p class="sub">Cột app được tính bằng mã nguồn hiện tại của app. Cột Phùng Gia (PG) lấy từ file la_so_tu_tru (2).pdf bạn gửi.</p>
+  </header>
+
+  <div class="alert" role="note">
+    <h3>Lưu ý trước khi đọc: hai bên đang dùng hai ngày sinh khác nhau</h3>
+    <p>PDF ghi “05:09 <b>07/03/2020</b>”, tức <b>7 tháng 3</b>, âm lịch 14/02 (trụ ngày Kỷ Dậu). Link app bạn gửi lúc trước có <code>ngay=2020-07-03</code>, tức <b>3 tháng 7</b> (trụ ngày Đinh Mùi). Đó là hai lá số hoàn toàn khác nhau, nên phần giải thích “Quan Sát là Kỵ thần” trước đây thuộc lá số 3/7. Bảng dưới đây chạy app theo đúng ngày trong PDF (7/3/2020) để so cùng một lá số. Bạn cần xác nhận ngày sinh thật của bé là ngày nào.</p>
+  </div>
+
+  <div class="tiles">
+    <div class="tile ok"><b>Trùng</b><span>Tứ trụ, âm lịch, Thai nguyên, Mệnh cung</span></div>
+    <div class="tile ok"><b>Trùng</b><span>Tàng can, thập thần, trường sinh, nạp âm</span></div>
+    <div class="tile ok"><b>Trùng</b><span>Chuỗi 9 đại vận và thập thần của vận</span></div>
+    <div class="tile warn"><b>Lệch 10 ngày</b><span>Ngày khởi vận: app 17/10/2020, PG 07/10/2020</span></div>
+    <div class="tile warn"><b>Khác bộ sao</b><span>Thần sát: 6 sao trùng, mỗi bên có vài sao riêng</span></div>
+    <div class="tile ok"><b>Cùng kết luận nhược</b><span>App: hỗ trợ 31,3% (Cực nhược). PG: 7,7%, vô căn (nhược cực)</span></div>
+    <div class="tile bad"><b>PG tự mâu thuẫn</b><span>Dụng thần: PG đưa ra hai đáp án ngược nhau; app trùng với một trong hai</span></div>
+  </div>
+
+  <div class="legend"><span><i style="background:var(--ok-bg)"></i>Trùng nhau</span><span><i style="background:var(--warn-bg)"></i>Khác nhỏ hoặc khác cách chọn</span><span><i style="background:var(--bad-bg)"></i>Khác nhau</span><span>Dòng trên: app · dòng “PG”: Phùng Gia</span></div>
+
+  <section>
+    <h2>1. Thông tin chung</h2>
+    <div class="scroll"><table>
+      <thead><tr><th>Hạng mục</th><th>App</th><th>Phùng Gia</th><th>Kết quả</th></tr></thead>
+      <tbody>
+        <tr><th>Dương lịch</th><td>05:09 07/03/2020</td><td>05:09 07/03/2020</td><td class="ok">Trùng</td></tr>
+        <tr><th>Âm lịch</th><td>14/02/2020 (năm Canh Tý)</td><td>14/02/2020</td><td class="ok">Trùng</td></tr>
+        <tr><th>Thai nguyên</th><td>Canh Ngọ</td><td>Canh Ngọ</td><td class="ok">Trùng</td></tr>
+        <tr><th>Mệnh cung</th><td>Đinh Hợi</td><td>Đinh Hợi</td><td class="ok">Trùng</td></tr>
+        <tr><th>Không vong (theo ngày Kỷ Dậu)</th><td>Dần, Mão</td><td>Ghi “Không Vong” ở trụ tháng và trụ giờ (đều là Mão)</td><td class="ok">Trùng</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>2. Tứ trụ chi tiết</h2>
+    <div class="scroll"><table>
+      <thead><tr><th></th><th>Trụ năm</th><th>Trụ tháng</th><th>Trụ ngày (nhật chủ)</th><th>Trụ giờ</th></tr></thead>
+      <tbody>
+        <tr><th>Can chi</th>
+          <td class="ok"><span class="kim">Canh</span> <span class="thuy">Tý</span></td>
+          <td class="ok"><span class="tho">Kỷ</span> <span class="moc">Mão</span></td>
+          <td class="ok"><span class="tho">Kỷ</span> <span class="kim">Dậu</span></td>
+          <td class="ok"><span class="hoa">Đinh</span> <span class="moc">Mão</span></td></tr>
+        <tr><th>Thập thần can</th><td class="ok">Thương Quan</td><td class="ok">Tỷ Kiên</td><td class="ok">Nhật chủ</td><td class="ok">Thiên Ấn</td></tr>
+        <tr><th>Tàng can</th><td class="ok">Quý (Thiên Tài)</td><td class="ok">Ất (Thất Sát)</td><td class="ok">Tân (Thực Thần)</td><td class="ok">Ất (Thất Sát)</td></tr>
+        <tr><th>Trường sinh</th><td class="ok">Tuyệt</td><td class="ok">Bệnh</td><td class="ok">Trường Sinh</td><td class="ok">Bệnh</td></tr>
+        <tr><th>Nạp âm</th><td class="ok">Bích Thượng Thổ</td><td class="ok">Thành Đầu Thổ</td><td class="ok">Đại Trạch Thổ</td><td class="ok">Lư Trung Hỏa</td></tr>
+        <tr><th>Thần sát</th>
+          <td class="warn"><div class="cmp"><span>Thiên Ất Quý Nhân</span><span class="b">Thiên Ất, Tướng Tinh</span></div></td>
+          <td class="warn"><div class="cmp"><span>Tai Sát, Không Vong, Hồng Loan</span><span class="b">Tai Sát, Không Vong</span></div></td>
+          <td class="warn"><div class="cmp"><span>Đào Hoa, Thiên Hỷ, Văn Xương, Dương Nhận</span><span class="b">Đào Hoa, Thiên Hỷ</span></div></td>
+          <td class="warn"><div class="cmp"><span>Tai Sát, Không Vong, Hồng Loan</span><span class="b">Tai Sát, Không Vong</span></div></td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">Thần sát: 6 sao hai bên đều có được đặt đúng cùng vị trí. App có thêm Hồng Loan (năm Tý → Mão), Văn Xương (can Kỷ → Dậu) và Dương Nhận (can năm Canh → Dậu), vì PG không dùng các sao này trong bảng. PG có Tướng Tinh ở trụ năm Tý, tức lấy chi năm Tý tra chính nó; app cố ý không tự tra một trụ với chính nó, nên không ghi sao này.</p>
+  </section>
+
+  <section>
+    <h2>3. Đại vận</h2>
+    <div class="scroll"><table>
+      <thead><tr><th>Vận</th><th>Can chi</th><th>Thập thần (can / chi)</th><th>Năm bắt đầu</th><th>App đánh giá theo Dụng thần</th></tr></thead>
+      <tbody>
+        <tr><th>Khởi vận</th><td colspan="3" class="warn"><div class="cmp"><span>17/10/2020 (0 năm 7 tháng 10 ngày), đi nghịch</span><span class="b">07/10/2020</span></div></td><td>—</td></tr>
+        <tr><th>1</th><td class="ok">Mậu Dần</td><td class="ok">Kiếp Tài / Chính Quan</td><td class="ok">2020</td><td>Nghịch</td></tr>
+        <tr><th>2</th><td class="ok">Đinh Sửu</td><td class="ok">Thiên Ấn / Tỷ Kiên</td><td class="ok">2030</td><td>Rất thuận</td></tr>
+        <tr><th>3</th><td class="ok">Bính Tý</td><td class="ok">Chính Ấn / Thiên Tài</td><td class="ok">2040</td><td>Thuận</td></tr>
+        <tr><th>4</th><td class="ok">Ất Hợi</td><td class="ok">Thất Sát / Chính Tài</td><td class="ok">2050</td><td>Nghịch</td></tr>
+        <tr><th>5</th><td class="ok">Giáp Tuất</td><td class="ok">Chính Quan / Kiếp Tài</td><td class="ok">2060</td><td>Bình</td></tr>
+        <tr><th>6</th><td class="ok">Quý Dậu</td><td class="ok">Thiên Tài / Thực Thần</td><td class="ok">2070</td><td>Nghịch</td></tr>
+        <tr><th>7</th><td class="ok">Nhâm Thân</td><td class="ok">Chính Tài / Thương Quan</td><td class="ok">2080</td><td>Nghịch</td></tr>
+        <tr><th>8</th><td class="ok">Tân Mùi</td><td class="ok">Thực Thần / Tỷ Kiên</td><td class="ok">2090</td><td>Bình</td></tr>
+        <tr><th>9</th><td class="ok">Canh Ngọ</td><td class="ok">Thương Quan / Thiên Ấn</td><td class="ok">2100</td><td>Thuận</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">PG liệt kê thêm vận thứ 10 (Kỷ Tỵ, từ 2110); app dừng ở 9 vận. Ngày khởi vận lệch 10 ngày vì PG bỏ phần ngày lẻ khi quy đổi (3 ngày = 1 năm, 1 canh giờ = 10 ngày), giống 20 ca đã thử trước đây. PG không chấm tốt/xấu cho từng vận, nên cột cuối chỉ có của app.</p>
+  </section>
+
+  <section>
+    <h2>4. Ngũ hành và vượng nhược</h2>
+    <div class="two">
+      <div class="card">
+        <h3>App <small>· chỉ nguyên cục bốn trụ, có hệ số mùa Xuân</small></h3>
+        <div class="bars">
+          <div class="bar moc"><span>Mộc</span><span class="t"><span style="width:36.9%"></span></span><span>36,9%</span></div>
+          <div class="bar kim"><span>Kim</span><span class="t"><span style="width:20.5%"></span></span><span>20,5%</span></div>
+          <div class="bar tho"><span>Thổ</span><span class="t"><span style="width:18.2%"></span></span><span>18,2%</span></div>
+          <div class="bar hoa"><span>Hỏa</span><span class="t"><span style="width:13.1%"></span></span><span>13,1%</span></div>
+          <div class="bar thuy"><span>Thủy</span><span class="t"><span style="width:11.4%"></span></span><span>11,4%</span></div>
+        </div>
+        <p>Lực hỗ trợ = Ấn (Hỏa) + Tỷ Kiếp (Thổ) = <b>31,3%</b> → Thân nhược (hồ sơ ghi “Cực nhược” vì dưới 38%).</p>
+      </div>
+      <div class="card">
+        <h3>Phùng Gia <small>· “mệnh bàn kết hợp đại vận”, đã cộng vận Mậu Dần</small></h3>
+        <div class="bars">
+          <div class="bar moc"><span>Mộc</span><span class="t"><span style="width:52.75%"></span></span><span>52,75%</span></div>
+          <div class="bar kim"><span>Kim</span><span class="t"><span style="width:18.07%"></span></span><span>18,07%</span></div>
+          <div class="bar thuy"><span>Thủy</span><span class="t"><span style="width:16.34%"></span></span><span>16,34%</span></div>
+          <div class="bar hoa"><span>Hỏa</span><span class="t"><span style="width:6.42%"></span></span><span>6,42%</span></div>
+          <div class="bar tho"><span>Thổ</span><span class="t"><span style="width:6.42%"></span></span><span>6,42%</span></div>
+        </div>
+        <p>“Nhật chủ có mức năng lượng sở hữu là <b>7,7%</b>, vô căn” → nhược cực.</p>
+      </div>
+    </div>
+    <p class="note">Hai bên không cùng thang điểm: PG cộng cả đại vận đang chạy và coi nhẹ thiên can không có gốc; app chỉ tính bốn trụ. Thứ tự mạnh yếu vẫn giống nhau ở điểm chính: Mộc (Quan Sát) mạnh nhất áp đảo, Thổ của nhật chủ yếu. Cả hai đều kết luận <b>thân nhược</b>. PG nói đúng một điểm app chưa thể hiện: Kỷ Thổ <b>vô căn</b>, vì cả bốn địa chi Tý, Mão, Dậu, Mão đều không tàng Thổ.</p>
+  </section>
+
+  <section>
+    <h2>5. Dụng thần: điểm khác biệt chính</h2>
+    <div class="scroll"><table>
+      <thead><tr><th>Nguồn</th><th>Phương pháp</th><th>Hành có lợi</th><th>Hành bất lợi</th><th>Quan Sát (Mộc) là</th></tr></thead>
+      <tbody>
+        <tr><th>PG, mục “Dụng thần cân bằng nhật chủ”</th><td>Nhược cực, vô căn → thuận theo thế mạnh (lối Tòng cách)</td><td><span class="moc">Mộc</span>, <span class="thuy">Thủy</span> (Quan Sát, Tài)</td><td><span class="kim">Kim</span>, <span class="tho">Thổ</span> (Thực Thương, Tỷ Kiếp)</td><td class="bad">Dụng thần</td></tr>
+        <tr><th>PG, mục “Dụng thần cách cục”</th><td>Cách Quan → Ấn → Thân</td><td><span class="tho">Thổ</span> (Tỷ Kiếp)</td><td><span class="moc">Mộc</span> (Quan Sát)</td><td class="ok">Kỵ thần</td></tr>
+        <tr><th>PG, mục “Điều hầu”</th><td>Sinh mùa Xuân, nóng lạnh bình hòa</td><td colspan="2">Không cần Dụng thần Điều hầu</td><td>—</td></tr>
+        <tr><th>App</th><td>Phù ức: thân nhược, Quan Sát nặng nhất → dùng Ấn hóa Sát</td><td><span class="hoa">Hỏa</span> (Dụng, Ấn), <span class="tho">Thổ</span> (Hỷ, Tỷ Kiếp)</td><td><span class="moc">Mộc</span> (Kỵ), <span class="kim">Kim</span> (Cừu); <span class="thuy">Thủy</span> là Nhàn thần</td><td class="ok">Kỵ thần</td></tr>
+        <tr><th>App, Điều hầu</th><td>Sinh tháng Mão (mùa Xuân)</td><td colspan="2">Không có ghi chú Điều hầu, giống PG</td><td>—</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="findings">
+      <div class="finding"><h3><span class="pill bad">PDF tự mâu thuẫn</span> Mộc vừa là Dụng thần vừa là Kỵ thần</h3>
+        <p>Cùng một bản PDF, mục “cân bằng nhật chủ” xếp Mộc (Quan Sát) vào Dụng – Hỷ thần, nhưng mục “cách cục” ngay bên dưới lại xếp Mộc vào Kỵ thần và chọn Thổ làm Dụng. Hai kết luận này không thể cùng đúng. Câu “Quan Sát là Dụng thần” bạn đọc được đến từ mục thứ nhất.</p></div>
+      <div class="finding"><h3><span class="pill ok">App khớp mục cách cục</span> Sát Ấn tương sinh</h3>
+        <p>Chuỗi “Quan → Ấn → Thân” của PG chính là phép “dùng Ấn hóa Sát” mà app áp dụng: Mộc (Sát) sinh Hỏa (Ấn), Hỏa sinh Thổ (thân). App chọn Hỏa làm Dụng, Thổ làm Hỷ, Mộc làm Kỵ, nên về hướng thì trùng với mục cách cục của PG. Khác ở chỗ PG chỉ nêu Thổ, còn app đặt Hỏa (Ấn) lên trước vì Hỏa vừa hút bớt Mộc vừa sinh Thổ.</p></div>
+      <div class="finding"><h3><span class="pill warn">Vì sao lá số này khó coi là Tòng</span> Điều kiện Tòng cách chưa đủ</h3>
+        <p>Muốn “tòng” theo Quan Sát (dùng chính Mộc), nhật chủ phải vô căn và không có Ấn, Tỷ đỡ. Lá số này đúng là Kỷ Thổ vô căn, nhưng:</p>
+        <ul>
+          <li>Có <b>Đinh Hỏa (Thiên Ấn) lộ ở trụ giờ</b>, đứng sát nhật chủ, lại ngồi trên Mão Mộc nên được Mộc sinh liên tục.</li>
+          <li>Có <b>Kỷ Thổ (Tỷ Kiên) lộ ở trụ tháng</b> đứng cạnh nhật chủ.</li>
+        </ul>
+        <p>Theo sách cổ, khi có Ấn lộ và được sinh thì thường không luận Tòng mà luận “Sát Ấn tương sinh”, tức dùng Ấn. Vì vậy cách đọc của app và mục cách cục của PG có cơ sở chặt hơn mục “cân bằng nhật chủ” của PG. Phần này vẫn là luận đoán theo trường phái, không có đáp án tuyệt đối.</p></div>
+      <div class="finding"><h3><span class="pill warn">Điểm app nên bổ sung</span> Cảnh báo nhật chủ vô căn</h3>
+        <p>Con số 31,3% của app chưa cho thấy nhật chủ không có gốc ở địa chi, một yếu tố làm thân yếu hơn mức con số gợi ra. App nên ghi rõ “nhật chủ vô căn” và nhắc người luận cân nhắc khả năng Tòng cách khi gặp lá số như thế này.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>6. Lưu niên 2024 – 2027 theo app</h2>
+    <div class="scroll"><table>
+      <thead><tr><th>Năm</th><th>Can chi</th><th>Thập thần (can / chi)</th><th>App đánh giá</th><th>Ghi chú</th></tr></thead>
+      <tbody>
+        <tr><th>2024</th><td>Giáp Thìn</td><td>Chính Quan / Kiếp Tài</td><td>Bình</td><td>Thìn lục hợp Dậu (cung phu thê)</td></tr>
+        <tr><th>2025</th><td>Ất Tỵ</td><td>Thất Sát / Chính Ấn</td><td>Thuận</td><td>Tỵ Hỏa là Dụng thần</td></tr>
+        <tr><th>2026</th><td>Bính Ngọ</td><td>Chính Ấn / Thiên Ấn</td><td>Rất thuận</td><td>Ngọ xung Tý (trụ năm)</td></tr>
+        <tr><th>2027</th><td>Đinh Mùi</td><td>Thiên Ấn / Tỷ Kiên</td><td>Rất thuận</td><td></td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">Can chi và thập thần của các năm 2020 – 2029 trùng với bảng lưu niên trong PDF. PG không chấm tốt/xấu cho từng năm. Nếu theo mục “cân bằng nhật chủ” của PG (Mộc, Thủy là có lợi), các năm Hỏa như 2026 – 2027 sẽ bị đánh giá ngược lại, nên việc chọn đúng phương pháp Dụng thần ảnh hưởng trực tiếp tới phần luận vận.</p>
+  </section>
+</div>
