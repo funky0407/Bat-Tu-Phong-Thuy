@@ -14,7 +14,7 @@
     V = BT.VAN;
     var inp = c.inp, gt = inp.gender === 1 ? 'nam' : 'nu';
     var nc = BT.ganHanh(c.dg), nh = c.nguHanh, p = nh.pct, dt = c.dungThan;
-    var bd = (opt.bietDanh || '').trim() || (inp.name || '').trim().split(/\s+/).pop() || 'em';
+    var bd = (opt.bietDanh || '').trim() || (inp.name || '').trim().split(/\s+/).pop() || 'bạn';
     var Y = opt.nam || new Date().getFullYear();
     var mua = [11, 0, 1].indexOf(c.month.z) >= 0 ? 'dong' : [5, 6, 7].indexOf(c.month.z) >= 0 ? 'ha' : '';
     var lanh = dt.dieuHau && dt.dieuHau.e === 1, nong = dt.dieuHau && dt.dieuHau.e === 4;
@@ -47,7 +47,7 @@
     var tn = c.tru[0], mc = c.tru[1];
     o.push('<h2>❖ I. THÔNG TIN GIA CHỦ &amp; TỨ TRỤ MỆNH BÀN</h2>' +
       '<div class="hs-ttin">' +
-      '<b>Họ và tên gia chủ:</b><span class="dam">' + esc(inp.name || bd) + '</span>' +
+      '<b>Họ và tên gia chủ:</b><span class="dam">' + esc(inp.name || (opt.bietDanh || '').trim() || '—') + '</span>' +
       '<b>Dương lịch sinh:</b><span class="dam">' + pad(inp.d) + '/' + pad(inp.m) + '/' + inp.y + ' - ' + pad(inp.h) + ':' + pad(inp.mi) + ' (Giờ ' + Z[c.time.z] + ')</span>' +
       '<b>Giới tính:</b><span>' + (gt === 'nam' ? 'Nam giới' : 'Nữ giới') + '</span>' +
       '<b>Âm lịch sinh:</b><span>' + am + ' (' + (al.nhuan ? 'tháng nhuận, ' : '') + 'Năm ' + namAm + ')</span>' +
@@ -84,7 +84,7 @@
     var soCan = c.tuTru.filter(function (t) { return t.g === c.dg; }).length;
     var theKey = mt.key;
     var p1 = 'Nhật Can ' + G[c.dg] + ' ' + H[nc] + ' (' + (BT.isDuong(c.dg) ? 'Dương ' : 'Âm ') + H[nc] + ') mang hình tượng của ' + nct.hinh + '. Đặc trưng của người ' +
-      G[c.dg] + ' ' + H[nc] + ' là ' + nct.tinh + '. Em sinh vào Tháng ' + Z[c.month.z] + ' (' + V.THANG[c.month.z] + '), ' +
+      G[c.dg] + ' ' + H[nc] + ' là ' + nct.tinh + '. Bạn sinh vào Tháng ' + Z[c.month.z] + ' (' + V.THANG[c.month.z] + '), ' +
       ([1, 4, 7, 10].indexOf(c.month.z) >= 0 && nc !== 2 ? 'thời khắc giao mùa khi Thổ khí đương lệnh' : V.TRANG_THAI_MUA[nh.trangThai[nc].ten].replace('{H}', H[nc])) + '. ' +
       (soCan >= 2 ? 'Cục diện cho thấy sự hiện diện của ' + soCan + ' can ' + G[c.dg] + ' ' + H[nc] + ' xếp hàng ngang, đẩy năng lượng hỗ trợ bản mệnh lên tới ' + pc(nh.hoTro) + '. '
         : 'Tổng lực hỗ trợ bản mệnh (Ấn + Tỷ Kiếp) đạt ' + pc(nh.hoTro) + '. ') +
@@ -169,27 +169,27 @@
       tdTN = 'THAI NGUYÊN ' + gzTN + ' - ĐỐM ' + V.DOM[eD] + ' CỨU MẠNG TRONG TRỨNG NƯỚC';
       var canD = BT.ganHanh(tn.g) === eD ? G[tn.g] + ' ' + H[eD] : Z[tn.z] + ' ' + H[eD];
       txTN = 'Khá ảo diệu, dù nguyên cục 4 trụ của ' + esc(bd) + ' có ' + H[eD] + ' = ' + pc(p[eD]) + ', nhưng Thai Nguyên (khí thụ thai bẩm sinh) lại là <b>' + gzTN + '</b>. ' +
-        canD + ' xuất hiện ngay tại gốc rễ sinh mệnh, âm thầm ' + V.DONG_TU[eD] + ' cục diện của em. Điều này chỉ ra rằng, dù cuộc sống có những giai đoạn bế tắc, nghèo túng hay cô độc, ' +
-        'sâu thẳm bên trong em vẫn luôn có một nguồn hy vọng, một quý nhân ngầm hoặc một sự may mắn bẩm sinh giúp em lật ngược thế cờ vào phút chót.';
+        canD + ' xuất hiện ngay tại gốc rễ sinh mệnh, âm thầm ' + V.DONG_TU[eD] + ' cục diện của bạn. Điều này chỉ ra rằng, dù cuộc sống có những giai đoạn bế tắc, nghèo túng hay cô độc, ' +
+        'sâu thẳm bên trong bạn vẫn luôn có một nguồn hy vọng, một quý nhân ngầm hoặc một sự may mắn bẩm sinh giúp bạn lật ngược thế cờ vào phút chót.';
     } else {
       var dgTN = BT.danhGia(c, tn.g, tn.z).muc;
       var moTaTN = 'Thai Nguyên ' + gz(tn.g, tn.z) + ' gồm ' + canChiVai(tn) + '. ';
       if (dgTN === 'Rất thuận' || dgTN === 'Thuận') {
         tdTN = 'THAI NGUYÊN ' + gzTN + ' - BỆ PHÓNG BẨM SINH';
-        txTN = moTaTN + 'Khí thụ thai nghiêng về hành có lợi cho lá số. Nền tảng bẩm sinh của em vững vàng: gia đình, gốc gác hoặc thiên phú tự nhiên chính là bệ đỡ để em đi xa.';
+        txTN = moTaTN + 'Khí thụ thai nghiêng về hành có lợi cho lá số. Nền tảng bẩm sinh của bạn vững vàng: gia đình, gốc gác hoặc thiên phú tự nhiên chính là bệ đỡ để bạn đi xa.';
       } else if (dgTN === 'Nghịch' || dgTN === 'Rất nghịch') {
         tdTN = 'THAI NGUYÊN ' + gzTN + ' - KHỞI ĐẦU TỪ THỬ THÁCH';
-        txTN = moTaTN + 'Khí thụ thai nghiêng về hành bất lợi. Điểm xuất phát của em không quá thuận lợi, nhiều thứ phải tự thân vận động; bù lại, chính nghịch cảnh rèn cho em bản lĩnh hơn người.';
+        txTN = moTaTN + 'Khí thụ thai nghiêng về hành bất lợi. Điểm xuất phát của bạn không quá thuận lợi, nhiều thứ phải tự thân vận động; bù lại, chính nghịch cảnh rèn cho bạn bản lĩnh hơn người.';
       } else {
         tdTN = 'THAI NGUYÊN ' + gzTN + ' - KHÍ CHẤT BẨM SINH';
-        txTN = moTaTN + 'Tốt xấu cân bằng, thiên phú của em không thiên lệch, thành tựu chủ yếu đến từ lựa chọn và nỗ lực của bản thân.';
+        txTN = moTaTN + 'Tốt xấu cân bằng, thiên phú của bạn không thiên lệch, thành tựu chủ yếu đến từ lựa chọn và nỗ lực của bản thân.';
       }
     }
     var dgMC = BT.danhGia(c, mc.g, mc.z).muc, zmc = BT.zhiHanh(mc.z);
     txTN += '<br>Mệnh Cung <b>' + gz(mc.g, mc.z) + '</b> gồm ' + canChiVai(mc) + '. ' +
-      (dgMC === 'Rất thuận' || dgMC === 'Thuận' ? 'Cung mệnh nghiêng về hành có lợi, cho thấy con đường đời của em gắn với ' + V.MIEN_NGAN[nhom(zmc)] + ' và đó cũng là nơi em tìm thấy may mắn.'
-        : dgMC === 'Nghịch' || dgMC === 'Rất nghịch' ? 'Cung mệnh nghiêng về hành bất lợi, nhắc em đừng quá sa đà vào ' + V.MIEN_NGAN[nhom(zmc)] + ' mà quên cân bằng cuộc sống.'
-          : 'Cung mệnh trung tính, cuộc đời em do chính em định hướng.');
+      (dgMC === 'Rất thuận' || dgMC === 'Thuận' ? 'Cung mệnh nghiêng về hành có lợi, cho thấy con đường đời của bạn gắn với ' + V.MIEN_NGAN[nhom(zmc)] + ' và đó cũng là nơi bạn tìm thấy may mắn.'
+        : dgMC === 'Nghịch' || dgMC === 'Rất nghịch' ? 'Cung mệnh nghiêng về hành bất lợi, nhắc bạn đừng quá sa đà vào ' + V.MIEN_NGAN[nhom(zmc)] + ' mà quên cân bằng cuộc sống.'
+          : 'Cung mệnh trung tính, cuộc đời bạn do chính bạn định hướng.');
     o.push('<div class="hs-hop"><h4>1. ' + tdTN + '</h4><p>' + txTN + '</p></div>');
 
     // 2. Thần sát nổi bật trong tứ trụ
@@ -211,7 +211,7 @@
         var s = bang[id], txt = V.SAO[id];
         var k = s.hanh.findIndex(function (e) { return tot(e); });
         if (k >= 0) txt += ' ' + s.noi[k] + ' ' + H[s.hanh[k]] + ' cũng chính là ' + vaiTen(s.hanh[k]) + ', chứng tỏ ' +
-          (id === 'quynhan' ? 'em gặp được quý nhân' : 'phúc khí của sao này đến với em') + ' thông qua ' + V.QUY_NHAN_QUA[nhom(s.hanh[k])] + '.';
+          (id === 'quynhan' ? 'bạn gặp được quý nhân' : 'phúc khí của sao này đến với bạn') + ' thông qua ' + V.QUY_NHAN_QUA[nhom(s.hanh[k])] + '.';
         return '<li><b>' + s.ten + ' (Tại ' + s.noi.join(', ') + '):</b> ' + txt + '</li>';
       }).concat(hungDs.map(function (id) {
         var s = bang[id];
@@ -227,8 +227,8 @@
     o.push('<h2>❖ IV. BẢN ĐỒ TÂM LÝ &amp; NÚT THẮT NĂNG LƯỢNG</h2><h4>1. Đặc Điểm Tính Cách Cốt Lõi</h4><ul>' +
       '<li><b>' + nct.tieuDe + ':</b> ' + nct.text + (nhomPct[nv] >= 15 ? ' ' + V.NHOM_VUONG[nv].replace('{P}', Math.round(nhomPct[nv] * 10) / 10) : '') + '</li>' +
       '<li><b>' + toa[0] + ':</b> ' + toa[1] + '</li>' +
-      (theKey === 'vuong' ? '<li><b>Tự Chủ Mạnh Mẽ:</b> Thân vượng giúp em có sức chịu đựng tốt, không dễ gục ngã. Nhưng năng lượng dư thừa cần được dẫn ra ngoài bằng công việc, sáng tạo, nếu không sẽ thành cố chấp.</li>'
-        : theKey === 'nhuoc' ? '<li><b>Nhạy Cảm Và Cần Điểm Tựa:</b> Thân nhược khiến em dễ mệt mỏi khi gánh quá nhiều. Biết chọn môi trường, chọn người đồng hành là chìa khóa để em phát huy hết năng lực.</li>' : '') +
+      (theKey === 'vuong' ? '<li><b>Tự Chủ Mạnh Mẽ:</b> Thân vượng giúp bạn có sức chịu đựng tốt, không dễ gục ngã. Nhưng năng lượng dư thừa cần được dẫn ra ngoài bằng công việc, sáng tạo, nếu không sẽ thành cố chấp.</li>'
+        : theKey === 'nhuoc' ? '<li><b>Nhạy Cảm Và Cần Điểm Tựa:</b> Thân nhược khiến bạn dễ mệt mỏi khi gánh quá nhiều. Biết chọn môi trường, chọn người đồng hành là chìa khóa để bạn phát huy hết năng lực.</li>' : '') +
       '</ul>');
     var rc = V.RAO_CAN[nw];
     o.push('<div class="hs-hop"><h4>2. CẢNH BÁO ĐIỂM MÙ &amp; SỨC KHỎE</h4><ul>' +
@@ -251,7 +251,7 @@
       // câu luận cho một hành của vận: tốt → VAN_TOT, xấu → VAN_XAU, Nhàn thần → không có tác động rõ
       function cauVan(e) { return tot(e) ? V.VAN_TOT[nhom(e)].replace('{VO}', VO_VAN) : xau(e) ? V.VAN_XAU[nhom(e)] : null; }
       var cz = cauVan(ez), cg = cauVan(eg);
-      var tx = 'Em đang ở ' + viTri + ' của đại vận ' + gz(van.g, van.z) + ' (can ' + G[van.g] + ' ' + H[eg] + ' – ' + ttg + ', ' + vaiTen(eg) +
+      var tx = 'Bạn đang ở ' + viTri + ' của đại vận ' + gz(van.g, van.z) + ' (can ' + G[van.g] + ' ' + H[eg] + ' – ' + ttg + ', ' + vaiTen(eg) +
         '; chi ' + Z[van.z] + ' ' + H[ez] + ' – ' + ttz + ', ' + vaiTen(ez) + '). ' +
         V.VAN_MUC[dv.muc].replace('{H}', dv.diem > 0 ? hTot : hXau) + ' ' +
         (k >= 7 ? 'Giai đoạn 10 năm qua, ' : 'Trong giai đoạn này, ');
@@ -269,12 +269,12 @@
         var ds2 = BT.danhGia(c, sau.g, sau.z);
         var sauTxt = 'đại vận ' + gz(sau.g, sau.z) + ' (' + sau.namBD + ' - ' + sau.namKT + ', ' + ds2.muc.toLowerCase() + ')';
         tx += ds2.diem > dv.diem + 0.3 ? (dv.diem < 0.4 ? ' Tuy nhiên, giai đoạn chịu đựng này sắp kết thúc để nhường chỗ cho ' : ' Phía trước còn thuận lợi hơn: ') + sauTxt + '.'
-          : ds2.diem < dv.diem - 0.3 ? ' Từ năm ' + sau.namBD + ', em bước sang ' + sauTxt + ', cần chuẩn bị kỹ lưỡng từ bây giờ: tích lũy, giữ sức khỏe và các mối quan hệ quý.'
+          : ds2.diem < dv.diem - 0.3 ? ' Từ năm ' + sau.namBD + ', bạn bước sang ' + sauTxt + ', cần chuẩn bị kỹ lưỡng từ bây giờ: tích lũy, giữ sức khỏe và các mối quan hệ quý.'
             : ' Từ năm ' + sau.namBD + ', ' + sauTxt + ' tiếp nối với nhịp độ tương tự.';
       }
       o.push('<h4>1. Chu Kỳ Đại Vận Hiện Tại: ' + gz(van.g, van.z) + ' (' + van.namBD + ' - ' + van.namKT + ' | ' + van.tuoi + ' - ' + (van.tuoi + 9) + ' tuổi)</h4><p>' + tx + '</p>');
     } else {
-      o.push('<h4>1. Giai Đoạn Trước Khởi Vận</h4><p>Em chưa bước vào đại vận đầu tiên (khởi vận năm ' + c.daiVan[0].namBD + '). Giai đoạn này vận trình chịu ảnh hưởng chủ yếu từ trụ tháng và môi trường gia đình.</p>');
+      o.push('<h4>1. Giai Đoạn Trước Khởi Vận</h4><p>Bạn chưa bước vào đại vận đầu tiên (khởi vận năm ' + c.daiVan[0].namBD + '). Giai đoạn này vận trình chịu ảnh hưởng chủ yếu từ trụ tháng và môi trường gia đình.</p>');
     }
 
     var hangNam = [];
@@ -322,7 +322,7 @@
       var title;
       if (moi) {
         title = 'Chuyển Giao Đại Vận ' + gz(moi.g, moi.z);
-        tx += ' Em chính thức bước vào 10 năm đại vận ' + gz(moi.g, moi.z) + ' (' + BT.danhGia(c, moi.g, moi.z).muc.toLowerCase() + ').';
+        tx += ' Bạn chính thức bước vào 10 năm đại vận ' + gz(moi.g, moi.z) + ' (' + BT.danhGia(c, moi.g, moi.z).muc.toLowerCase() + ').';
       } else if (xungs.length && (xungs[0].ten === 'đại vận' || xungs[0].ten === 'trụ ngày')) {
         title = 'NĂM ĐẠI BIẾN ĐỘNG (XUNG ' + xungs[0].chi.toUpperCase() + (d.diem >= 0.4 ? ' - ĐÓN ' + H[ez].toUpperCase() : '') + ')';
       } else {
@@ -339,7 +339,7 @@
     var phu = hyDs[hyDs.length - 1];
     var moTa = H[manhNhat] + ' vượng' + (lanh ? ', hàn khí nặng' : nong ? ', khô nóng' : '') + (p[w] < 3 ? ', khuyết ' + H[w] + ' trầm trọng' : ', ' + H[w] + ' yếu');
     var td = V.TU_DUY[dt.D];
-    o.push('<h2>❖ VI. ĐỊNH HƯỚNG BÁT TỰ CẢI VẬN TOÀN DIỆN (THÂN - TÂM - TRÍ)</h2><p>Đối diện với mệnh cục ' + moTa + ', chiến lược cải vận của em phải tập trung vào việc <b>Nạp ' + H[dt.D].toUpperCase() +
+    o.push('<h2>❖ VI. ĐỊNH HƯỚNG BÁT TỰ CẢI VẬN TOÀN DIỆN (THÂN - TÂM - TRÍ)</h2><p>Đối diện với mệnh cục ' + moTa + ', chiến lược cải vận của bạn phải tập trung vào việc <b>Nạp ' + H[dt.D].toUpperCase() +
       '</b> (' + V.TU_KHOA[dt.D] + ') và <b>Nạp ' + H[phu].toUpperCase() + '</b> (' + V.TU_KHOA[phu] + ').</p>' +
       '<h4>1. Chuyển Hóa Tư Duy &amp; Hành Vi</h4><ul>' + td.map(function (b) { return '<li><b>' + b[0] + ':</b> ' + b[1] + '</li>'; }).join('') + '</ul>');
     function lyDoTot(e) { return '(' + H[e] + ' kích hoạt ' + V.MIEN_NGAN[nhom(e)] + ')'; }
@@ -381,20 +381,20 @@
     var dsau = sau2 ? BT.danhGia(c, sau2.g, sau2.z) : null;
     var p7b;
     if (dvd && dsau && van.namKT - Y <= 1) {
-      p7b = 'Em đang ở chặng cuối của Đại vận ' + gz(van.g, van.z) + ' (' + dvd.muc.toLowerCase() + '); từ năm ' + sau2.namBD + ' chuyển sang Đại vận ' + gz(sau2.g, sau2.z) + ' (' + dsau.muc.toLowerCase() + ')' +
+      p7b = 'Bạn đang ở chặng cuối của Đại vận ' + gz(van.g, van.z) + ' (' + dvd.muc.toLowerCase() + '); từ năm ' + sau2.namBD + ' chuyển sang Đại vận ' + gz(sau2.g, sau2.z) + ' (' + dsau.muc.toLowerCase() + ')' +
         (dsau.diem > dvd.diem + 0.3 ? (dvd.diem < 0.4 ? ' – "Bĩ cực thái lai", giai đoạn khó khăn sắp qua, một chu kỳ thuận lợi đang mở ra.' : ', một chu kỳ còn thuận lợi hơn đang mở ra.')
           : dsau.diem < dvd.diem - 0.3 ? ', nhiều thử thách hơn; hãy tận dụng thời gian còn lại để tích lũy và đặt nền móng vững chắc.' : ', nhịp độ tương tự.');
     } else if (dvd && dvd.diem < 0.4 && dsau && dsau.diem >= 0.4) {
       p7b = '"Bĩ cực thái lai" (Khổ tận cam lai). Đại vận ' + gz(van.g, van.z) + ' còn nhiều thử thách, nhưng từ năm ' + sau2.namBD + ', Đại vận ' + gz(sau2.g, sau2.z) + ' (' + dsau.muc.toLowerCase() + ') sẽ mở ra chu kỳ thuận lợi.';
     } else if (dvd && dvd.diem >= 0.4) {
-      p7b = 'Em đang ở giai đoạn thuận lợi của Đại vận ' + gz(van.g, van.z) + ' (' + dvd.muc.toLowerCase() + '), đây là lúc tận dụng tối đa từng cơ hội.';
+      p7b = 'Bạn đang ở giai đoạn thuận lợi của Đại vận ' + gz(van.g, van.z) + ' (' + dvd.muc.toLowerCase() + '), đây là lúc tận dụng tối đa từng cơ hội.';
     } else if (dvd) {
       p7b = 'Đại vận ' + gz(van.g, van.z) + (dvd.diem > -0.4 ? ' tốt xấu đan xen' : ' còn nhiều thử thách') +
-        (dsau ? ', Đại vận kế tiếp ' + gz(sau2.g, sau2.z) + ' (từ ' + sau2.namBD + ') cũng chưa thật sự thuận lợi' : '') + ', nhưng đó cũng là lúc nội lực của em được tôi luyện.';
+        (dsau ? ', Đại vận kế tiếp ' + gz(sau2.g, sau2.z) + ' (từ ' + sau2.namBD + ') cũng chưa thật sự thuận lợi' : '') + ', nhưng đó cũng là lúc nội lực của bạn được tôi luyện.';
     } else if (dsau) {
-      p7b = 'Em chưa bước vào đại vận đầu tiên; Đại vận ' + gz(sau2.g, sau2.z) + ' (từ ' + sau2.namBD + ') được đánh giá ' + dsau.muc.toLowerCase() + '.';
-    } else p7b = 'Mỗi giai đoạn đều có bài học riêng, quan trọng là em giữ vững phương hướng.';
-    p7b += ' Kim chỉ nam cho em là: <b>"' + kc + '"</b>.';
+      p7b = 'Bạn chưa bước vào đại vận đầu tiên; Đại vận ' + gz(sau2.g, sau2.z) + ' (từ ' + sau2.namBD + ') được đánh giá ' + dsau.muc.toLowerCase() + '.';
+    } else p7b = 'Mỗi giai đoạn đều có bài học riêng, quan trọng là bạn giữ vững phương hướng.';
+    p7b += ' Kim chỉ nam cho bạn là: <b>"' + kc + '"</b>.';
     var namTot = null;
     for (var yy = Y; yy <= Y + 3; yy++) {
       var dd = BT.danhGia(c, ((yy - 4) % 10 + 10) % 10, ((yy - 4) % 12 + 12) % 12);
@@ -411,7 +411,7 @@
     if (vanTot) {
       var mucVT = BT.danhGia(c, vanTot.g, vanTot.z).muc;
       p7c += (vanTot.namBD - Y <= 6 ? ' Sắp tới, ' : ' Về đường dài, ') + 'Đại vận ' + gz(vanTot.g, vanTot.z) + ' (' + vanTot.namBD + ' - ' + vanTot.namKT + ', ' + mucVT.toLowerCase() + ') sẽ là ' +
-        (mucVT === 'Rất thuận' ? 'thời kỳ hoàng kim để em gặt hái.' : 'giai đoạn thuận lợi để em bứt phá.');
+        (mucVT === 'Rất thuận' ? 'thời kỳ hoàng kim để bạn gặt hái.' : 'giai đoạn thuận lợi để bạn bứt phá.');
     }
     o.push('<h2>❖ VII. LỜI KHUYÊN TỔNG KẾT &amp; KIM CHỈ NAM HÀNH ĐỘNG</h2><div class="hs-hop hs-ket"><p>' + p7a + '</p><p>' + p7b + '</p><p>' + p7c + '</p></div>');
 
