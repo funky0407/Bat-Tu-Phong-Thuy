@@ -30,7 +30,7 @@
     <div class="tom-tat" id="tom-tat"></div>
     <form class="nhap" id="form-nhap" autocomplete="off" hidden>
       <label class="ho-ten">Họ và tên<input id="ten" name="ten" type="text" placeholder="Ví dụ: Nguyễn Văn An"></label>
-      <label>Giới tính<select id="gioitinh" name="gioitinh"><option value="1">Nam</option><option value="0">Nữ</option></select></label>
+      <label>Giới tính<select id="gioitinh" name="gioitinh" required><option value="" selected disabled>Chọn giới tính</option><option value="1">Nam</option><option value="0">Nữ</option></select></label>
       <label>Ngày sinh (dương lịch)<input id="ngay" name="ngay" type="date" min="1900-01-01" max="2100-12-31" required></label>
       <label>Giờ sinh<input id="gio" name="gio" type="time" required></label>
       <label class="rong">Biệt danh (dùng trong hồ sơ)<input id="bietdanh" name="bietdanh" type="text" placeholder="Ví dụ: Sói"></label>

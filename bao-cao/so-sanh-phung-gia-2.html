@@ -1,0 +1,242 @@
+<title>Đối chiếu Phùng Gia lần 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Noto+Serif:wght@600;700&display=swap">
+<style>
+/* Layout: báo cáo kiểm thử một cột — tóm tắt, kết luận, rồi năm bảng đối chiếu cuộn ngang trong khung riêng */
+:root {
+  --bg: #fbf9f7; --surface: #ffffff; --ink: #231d1b; --muted: #6f625d; --line: #e6ddd7;
+  --accent: #9b2c1f; --ok: #2f7a4b; --ok-bg: #e5f2e9; --bad: #b4321f; --bad-bg: #fbe7e2; --warn: #9a6a12; --warn-bg: #fbf0d9;
+  --head: #f3ede8;
+  --f-display: 'Noto Serif', Georgia, serif;
+  --f-body: 'Be Vietnam Pro', 'Segoe UI', system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #171312; --surface: #201a19; --ink: #f0e8e4; --muted: #b1a39d; --line: #3a302d;
+  --accent: #e8836f; --ok: #7fd09c; --ok-bg: #1c3326; --bad: #ff8f7a; --bad-bg: #3d1f1a; --warn: #f0c46b; --warn-bg: #3a2f17; --head: #2a2220; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #171312; --surface: #201a19; --ink: #f0e8e4; --muted: #b1a39d; --line: #3a302d;
+  --accent: #e8836f; --ok: #7fd09c; --ok-bg: #1c3326; --bad: #ff8f7a; --bad-bg: #3d1f1a; --warn: #f0c46b; --warn-bg: #3a2f17; --head: #2a2220; color-scheme: dark }
+body { background: var(--bg); color: var(--ink); font: 15px/1.6 var(--f-body); }
+.wrap { max-width: 1180px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 56px; display: grid; gap: 28px; }
+h1, h2 { font-family: var(--f-display); text-wrap: balance; margin: 0; line-height: 1.25; }
+h1 { font-size: 1.85rem; color: var(--accent); }
+h2 { font-size: 1.25rem; }
+p { margin: 0; max-width: 72ch; }
+.sub { color: var(--muted); }
+header { display: grid; gap: 8px; }
+.eyebrow { font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; }
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; display: grid; gap: 2px; }
+.tile b { font-size: 1.5rem; font-variant-numeric: tabular-nums; }
+.tile span { font-size: .82rem; color: var(--muted); }
+.tile.ok b { color: var(--ok); } .tile.warn b { color: var(--warn); } .tile.bad b { color: var(--bad); }
+section { display: grid; gap: 12px; min-width: 0; }
+.findings { display: grid; gap: 10px; }
+.finding { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; display: grid; gap: 6px; }
+.finding h3 { margin: 0; font-size: 1rem; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.pill { font-size: .72rem; font-weight: 600; padding: 2px 8px; border-radius: 99px; letter-spacing: .03em; white-space: nowrap; }
+.pill.ok { background: var(--ok-bg); color: var(--ok); } .pill.bad { background: var(--bad-bg); color: var(--bad); } .pill.warn { background: var(--warn-bg); color: var(--warn); }
+.scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: .84rem; font-variant-numeric: tabular-nums; }
+th, td { padding: 7px 9px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; white-space: nowrap; }
+td.wrap-cell { white-space: normal; min-width: 220px; max-width: 340px; }
+thead th { background: var(--head); font-weight: 600; font-size: .76rem; letter-spacing: .03em; color: var(--muted); position: sticky; top: 0; }
+tbody tr:last-child td { border-bottom: 0; }
+td.name { font-weight: 600; }
+td.name small { display: block; font-weight: 400; color: var(--muted); }
+.cmp { display: grid; gap: 1px; }
+.cmp .a { color: var(--ink); } .cmp .b { color: var(--muted); font-size: .78rem; }
+td.ok { background: color-mix(in srgb, var(--ok-bg) 55%, transparent); }
+td.bad { background: var(--bad-bg); }
+td.bad .a, td.bad .b { color: var(--bad); }
+td.warn { background: var(--warn-bg); }
+.tag { font-size: .74rem; color: var(--muted); }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: .8rem; color: var(--muted); }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -2px; margin-right: 4px; border: 1px solid var(--line); }
+.note { font-size: .82rem; color: var(--muted); }
+.s-ok { color: var(--ok); } .s-app { color: var(--warn); } .s-pg { color: var(--bad); }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Kiểm thử đối chiếu lần 2 · 20 lá số ngẫu nhiên mới · Năm xem 2026</div>
+    <h1>App Bát Tự Phong Thủy so với Phong Thủy Phùng Gia</h1>
+    <p class="sub">Tên, giới tính, ngày giờ sinh được chọn ngẫu nhiên (năm 1944–2021, giờ Việt Nam) rồi nhập vào cả hai nơi. Cột của app được tính trực tiếp trên trang này bằng mã nguồn hiện tại của app, đã áp dụng cách tính theo sách “Dự đoán theo Tứ Trụ”. Cột Phùng Gia lấy từ phongthuyphunggia.com.vn/la-so-bat-tu ngày 15/10/2026.</p>
+  </header>
+
+  <div class="tiles" id="tiles"></div>
+
+  <section>
+    <h2>Kết luận chính</h2>
+    <div class="findings">
+      <div class="finding"><h3><span class="pill ok">Khớp</span> Lịch pháp trùng ở cả 20 ca</h3>
+        <p>Âm lịch, tứ trụ, Thai nguyên, Mệnh cung, Trường sinh và chuỗi can chi đại vận trùng nhau ở tất cả các ca. Ca Ngô Ngọc Hân sinh 23:41 nay cũng trùng trụ ngày (Đinh Sửu), vì app đã chuyển sang tính từ 23 giờ là sang ngày mới theo sách (tr.45, 178, 252). Nạp âm chỉ lệch một chữ ở Hoàng Lan Chi: Phùng Gia ghi “Phúc Đăng Hỏa”, tên đúng của nạp âm Ất Tỵ là Phú Đăng Hỏa (覆燈火, ngọn đèn có chụp).</p></div>
+      <div class="finding"><h3><span class="pill bad">Lỗi phía Phùng Gia</span> Năm khởi vận lệch 10 năm khi sinh tháng Sửu, vận nghịch</h3>
+        <p>Trần Hoài Nam (nam, năm Kỷ Mùi, 24/01/1980) sinh tháng Đinh Sửu, đại vận đi nghịch. Đếm lùi về tiết Tiểu Hàn (06/01/1980) được 18 ngày, tức 6 năm, nên khởi vận năm 1986. Phùng Gia ra năm 1995. Đây là đúng lỗi đã gặp ở lần đối chiếu trước (Đặng Ngọc Lan và lá số 17/01/1994), cùng điều kiện tháng Sửu và vận nghịch. Ở 19 ca còn lại, ngày khởi vận của app muộn hơn 0 đến 31 ngày vì Phùng Gia bỏ phần ngày lẻ khi quy đổi (3 ngày = 1 năm). Hai trong số đó (Cao Đức Anh, Dương Trung Kiên) chỉ lệch khoảng 20 ngày nhưng vắt qua ngày 1/1 nên ô “năm khởi vận” khác nhau.</p></div>
+      <div class="finding"><h3><span class="pill warn">Khác bảng tra</span> Thần sát: app tra theo bảng của sách, Phùng Gia tra rộng hơn ở vài sao</h3>
+        <p>Trong các sao hai bên cùng có, vị trí trùng khoảng hai phần ba. Phần lệch chủ yếu do gốc tra khác nhau. Kim Dư: sách tra theo can ngày (tr.146), Phùng Gia tra thêm theo can năm. Âm Dương Sai Thố: sách chỉ có 12 ngày (tr.326), Phùng Gia còn đánh dấu cả các ngày Mậu Tuất, Quý Mùi, Bính Thân, Nhâm Tý, Tân Sửu. Phúc Tinh: mọi vị trí app đưa ra đều đúng bảng tr.300, còn 7 vị trí của Phùng Gia nằm ngoài bảng này (ví dụ can Bính, Quý mà đặt ở Mùi). Ngược lại, Văn Xương, Dịch Mã, Kiếp Sát xuất hiện ở app nhiều hơn vì app tra theo cả năm lẫn ngày đúng như bảng tr.146; Thiên Đức, Nguyệt Đức (tra theo chi tháng) app cũng đặt nhiều hơn Phùng Gia.</p></div>
+      <div class="finding"><h3><span class="pill warn">Khác phương pháp</span> Vượng nhược: app theo cách tính độ của sách, Phùng Gia gần như chỉ đếm Tỷ Kiếp</h3>
+        <p>App cộng cả Ấn và Tỷ Kiếp, có tính hợp hóa, xung, khắc và hệ số nguyệt lệnh, mốc vượng là 40% (sách tr.331–355). Phùng Gia cho con số “năng lượng nhật chủ” thấp hơn hẳn ở hầu hết các ca. Hai ca lệch phe rõ nhất: Trần Đức Anh (Phùng Gia 22,2% nhưng vẫn kết luận vượng) và Bùi Thu Trang. Ở Bùi Thu Trang, Mậu–Quý kề nhau, chi tháng Thân sinh Thủy nên theo sách hợp hóa “phu tòng thê” thành Thủy (tr.336–338), cộng Thân–Tỵ lục hợp hóa Thủy. Phe Quý Thủy vì thế rất mạnh (68,5%), còn Phùng Gia chấm nhược 8,4%.</p></div>
+      <div class="finding"><h3><span class="pill warn">Đã sửa trong lúc kiểm thử</span> Hai lỗi của app lộ ra từ bộ ca này</h3>
+        <p>Thứ nhất, app từng coi ca Bùi Thu Trang là “Hóa khí cách Thủy” rồi lấy Thủy làm Dụng thần dù nhật chủ Quý vốn đã là Thủy, tức không hề đổi hành. Nay chỉ tính Hóa khí cách khi nhật can hóa sang hành khác. Thứ hai, ca Dương Văn Toàn phe nhật chủ chỉ còn 0% (Hợi Tỵ xung làm tan Canh trong Tỵ, Tý Thìn hợp hóa Thủy, hai can Canh hư phù lại bị Đinh khắc) nhưng app không cảnh báo Tòng vì vẫn dựa vào gốc cũ. Nay khi phe nhật chủ dưới 20% (Cực Nhược) app luôn nêu hướng luận Tòng bên cạnh kết quả Phù ức.</p></div>
+      <div class="finding"><h3><span class="pill warn">Khác phương pháp</span> Lá số cực nhược: Phùng Gia luận Tòng, app luận Phù ức kèm cảnh báo Tòng</h3>
+        <p>Sách không giới thiệu cách cục đặc biệt cho người mới học và chọn dụng thần theo Phù ức (tr.160–162), nên app giữ kết quả Phù ức, đồng thời ghi rõ “nếu luận Tòng thì Dụng thần là…”. Ở các ca Phùng Gia ra “quá nhược” hoặc “nhược cực”, hướng Tòng mà app gợi ý khớp hoặc gần khớp với Phùng Gia (xem cột “Nếu luận Tòng” ở bảng 4).</p></div>
+    </div>
+  </section>
+
+  <div class="legend"><span><i style="background:var(--ok-bg)"></i>Hai bên trùng nhau</span><span><i style="background:var(--warn-bg)"></i>Khác nhỏ hoặc khác trường phái</span><span><i style="background:var(--bad-bg)"></i>Khác nhau</span><span>Dòng trên: app · dòng dưới (chữ nhỏ): Phùng Gia</span></div>
+
+  <section>
+    <h2>1. Âm lịch và tứ trụ</h2>
+    <div class="scroll"><table id="t1"></table></div>
+  </section>
+
+  <section>
+    <h2>2. Trường sinh và nạp âm của bốn trụ</h2>
+    <div class="scroll"><table id="t2"></table></div>
+  </section>
+
+  <section>
+    <h2>3. Đại vận</h2>
+    <div class="scroll"><table id="t3"></table></div>
+  </section>
+
+  <section>
+    <h2>4. Vượng nhược và Dụng thần</h2>
+    <div class="scroll"><table id="t4"></table></div>
+    <p class="note">“Phe nhật chủ” của app là Tỷ Kiếp + Ấn tính theo độ của sách; con số của Phùng Gia là “mức năng lượng nhật chủ sở hữu” theo cách riêng của họ, nên không kỳ vọng trùng số. Cột “Đánh giá” so Dụng thần chính của app (Phù ức) với nhóm Dụng–Hỷ của Phùng Gia; cột “Nếu luận Tòng” là hướng thay thế app nêu trong cảnh báo.</p>
+  </section>
+
+  <section>
+    <h2>5. Thần sát theo từng trụ</h2>
+    <div class="scroll"><table id="t5"></table></div>
+    <p class="note">Chỉ so các sao mà cả hai bên đều có trong danh mục. <span class="s-ok">Xanh</span>: hai bên cùng đặt ở trụ đó · <span class="s-app">vàng</span>: chỉ app có · <span class="s-pg">đỏ</span>: chỉ Phùng Gia có. Phùng Gia còn dùng các sao app chưa có: <span id="pg-rieng"></span>. App có thêm: <span id="app-rieng"></span>.</p>
+  </section>
+</div>
+
+<script src="js/vendor/lunar.js"></script>
+<script src="js/vi.js"></script>
+<script src="js/amlich.js"></script>
+<script src="js/shensha.js"></script>
+<script src="js/bazi.js"></script>
+<script src="pg-20-moi.js"></script>
+<script>
+var G = BT.GAN, Z = BT.ZHI, H = BT.HANH, TRU = ['Năm', 'Tháng', 'Ngày', 'Giờ'];
+function gz(g, z) { return G[g] + ' ' + Z[z]; }
+function p2(n) { return (n < 10 ? '0' : '') + n; }
+function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+function cell(a, b, cls) {
+  if (cls == null) cls = a === b ? 'ok' : 'bad';
+  return '<td class="' + cls + '"><div class="cmp"><span class="a">' + esc(a) + '</span>' + (a === b ? '' : '<span class="b">' + esc(b) + '</span>') + '</div></td>';
+}
+function ngay(s) { var p = s.split('/'); return Date.UTC(+p[2], +p[1] - 1, +p[0]); }
+function ds(s) { return s.split(', ').map(function (x) { return x.trim(); }); }
+
+var rows = PG.map(function (x) {
+  var c = x.c, ch = BT.lapLaSo({ name: c[0], gender: c[1], y: c[2], m: c[3], d: c[4], h: c[5], mi: c[6] });
+  var t = [ch.tru[5], ch.tru[4], ch.tru[3], ch.tru[2]], kv = ch.khoiVan.ngayDL.split('-'), dt = ch.dungThan;
+  return { x: x, ch: ch,
+    am: p2(ch.amLich.d) + '/' + p2(ch.amLich.m) + '/' + ch.amLich.y, nhuan: ch.amLich.nhuan,
+    thai: gz(ch.tru[0].g, ch.tru[0].z), menh: gz(ch.tru[1].g, ch.tru[1].z),
+    tru: t.map(function (p) { return gz(p.g, p.z); }), ts: t.map(function (p) { return BT.TRUONG_SINH[p.ts]; }), na: t.map(function (p) { return p.napAm; }),
+    khoi: kv[2] + '/' + kv[1] + '/' + kv[0], van: ch.daiVan.slice(0, 4).map(function (v) { return gz(v.g, v.z); }),
+    tot: [dt.D].concat(dt.ds.filter(function (q) { return q.vai === 1; }).map(function (q) { return q.e; })).map(function (e) { return H[e]; }),
+    ky: dt.ds.filter(function (q) { return q.vai === 2 || q.vai === 3; }).map(function (q) { return H[q.e]; }) };
+});
+function who(r) { var c = r.x.c; return '<td class="name">' + esc(c[0]) + '<small>' + (c[1] ? 'Nam' : 'Nữ') + ' · ' + p2(c[5]) + ':' + p2(c[6]) + ' ' + p2(c[4]) + '/' + p2(c[3]) + '/' + c[2] + '</small></td>'; }
+
+var ok = { tru: 0, am: 0, thai: 0, ts: 0, na: 0, van: 0, khoiNam: 0, dung: 0, tong: 0, sao: 0, saoTong: 0 };
+
+// Bảng 1
+document.getElementById('t1').innerHTML = '<thead><tr><th>Lá số</th><th>Âm lịch</th>' + TRU.map(function (n) { return '<th>Trụ ' + n.toLowerCase() + '</th>'; }).join('') + '<th>Thai nguyên</th><th>Mệnh cung</th></tr></thead><tbody>' +
+  rows.map(function (r) {
+    var x = r.x;
+    if (r.tru.join() === x.tru.join()) ok.tru++; if (r.am === x.am) ok.am++; if (r.thai === x.thai && r.menh === x.menh) ok.thai++;
+    return '<tr>' + who(r) + cell(r.am + (r.nhuan ? ' (nhuận)' : ''), x.am, r.am === x.am ? 'ok' : 'bad') +
+      r.tru.map(function (v, i) { return cell(v, x.tru[i]); }).join('') + cell(r.thai, x.thai) + cell(r.menh, x.menh) + '</tr>';
+  }).join('') + '</tbody>';
+
+// Bảng 2
+document.getElementById('t2').innerHTML = '<thead><tr><th>Lá số</th>' + TRU.map(function (n) { return '<th>Trường sinh ' + n.toLowerCase() + '</th>'; }).join('') + TRU.map(function (n) { return '<th>Nạp âm ' + n.toLowerCase() + '</th>'; }).join('') + '</tr></thead><tbody>' +
+  rows.map(function (r) {
+    var x = r.x;
+    if (r.ts.join() === x.ts.join()) ok.ts++; if (r.na.join() === x.na.join()) ok.na++;
+    return '<tr>' + who(r) + r.ts.map(function (v, i) { return cell(v, x.ts[i]); }).join('') +
+      r.na.map(function (v, i) { return cell(v, x.na[i], v === x.na[i] ? 'ok' : (v === 'Phú Đăng Hỏa' && x.na[i] === 'Phúc Đăng Hỏa' ? 'warn' : 'bad')); }).join('') + '</tr>';
+  }).join('') + '</tbody>';
+
+// Bảng 3
+document.getElementById('t3').innerHTML = '<thead><tr><th>Lá số</th><th>Chiều</th><th>Ngày khởi vận</th><th>Chênh</th>' + [1, 2, 3, 4].map(function (i) { return '<th>Vận ' + i + '</th>'; }).join('') + '</tr></thead><tbody>' +
+  rows.map(function (r) {
+    var x = r.x, chenh = Math.round((ngay(r.khoi) - ngay(x.khoi)) / 864e5), cungNam = r.khoi.slice(-4) === x.khoi.slice(-4);
+    if (cungNam) ok.khoiNam++; if (r.van.join() === x.van.join()) ok.van++;
+    var nhan = chenh === 0 ? 'Trùng' : Math.abs(chenh) > 365 ? Math.round(chenh / 365.25) + ' năm' : (chenh > 0 ? '+' : '') + chenh + ' ngày';
+    return '<tr>' + who(r) + '<td>' + (r.ch.khoiVan.thuan ? 'Thuận' : 'Nghịch') + '</td>' +
+      cell(r.khoi, x.khoi, chenh === 0 ? 'ok' : cungNam ? 'warn' : 'bad') +
+      '<td class="' + (chenh === 0 ? 'ok' : cungNam ? 'warn' : 'bad') + '">' + nhan + '</td>' +
+      r.van.map(function (v, i) { return cell(v, x.van[i]); }).join('') + '</tr>';
+  }).join('') + '</tbody>';
+
+// Bảng 4
+document.getElementById('t4').innerHTML = '<thead><tr><th>Lá số</th><th>Nhật chủ</th><th>Cách cục (app)</th><th>Vượng / nhược</th><th>Hành có lợi</th><th>Hành bất lợi</th><th>Đánh giá</th><th>Nếu luận Tòng (app)</th></tr></thead><tbody>' +
+  rows.map(function (r) {
+    var x = r.x, ch = r.ch, nh = ch.nguHanh, dt = ch.dungThan, pgTot = ds(x.dung);
+    var dungChung = pgTot.indexOf(r.tot[0]) >= 0, nguoc = !dungChung && pgTot.every(function (e) { return r.ky.indexOf(e) >= 0; });
+    var muc = dungChung ? ['Đồng thuận', 'ok'] : nguoc ? ['Ngược nhau', 'bad'] : ['Lệch một phần', 'warn'];
+    if (dungChung) ok.dung++;
+    var tongCell = '<td class="tag">—</td>';
+    if (dt.tong) {
+      var tTot = [H[dt.tong.D2], H[dt.tong.hy2]], khop = tTot.indexOf(pgTot[0]) >= 0 && pgTot.length && tTot.some(function (e) { return pgTot.indexOf(e) >= 0; });
+      var full = tTot.every(function (e) { return pgTot.indexOf(e) >= 0; });
+      if (!dungChung && full) ok.tong++;
+      tongCell = '<td class="' + (full ? 'ok' : khop ? 'warn' : '') + '"><div class="cmp"><span class="a">' + esc(dt.tong.loai) + ': ' + tTot.join(', ') + '</span><span class="b">' + (full ? 'trùng nhóm có lợi của Phùng Gia' : khop ? 'trùng một phần' : 'khác Phùng Gia') + '</span></div></td>';
+    }
+    return '<tr>' + who(r) + '<td>' + G[ch.dg] + ' ' + H[BT.ganHanh(ch.dg)] + '</td>' +
+      '<td>' + esc(ch.cachCuc.ten) + (ch.cachCuc.dac ? '<div class="tag">dấu hiệu ' + esc(ch.cachCuc.dac.ten) + '</div>' : '') + '</td>' +
+      '<td><div class="cmp"><span class="a">' + BT.mucThan(nh.hoTro).ten + ' · ' + nh.hoTro.toFixed(1) + '%' + (dt.satNguong ? ' <span class="tag">(sát ngưỡng)</span>' : '') + '</span><span class="b">' + esc(x.nc) + ' · ' + esc(x.can) + '</span></div></td>' +
+      '<td><div class="cmp"><span class="a">' + r.tot[0] + ' (Dụng)' + (r.tot.length > 1 ? ', ' + r.tot.slice(1).join(', ') + ' (Hỷ)' : '') + '</span><span class="b">' + esc(x.dung) + '</span></div></td>' +
+      '<td><div class="cmp"><span class="a">' + r.ky.join(', ') + '</span><span class="b">' + esc(x.ky) + '</span></div></td>' +
+      '<td class="' + muc[1] + '">' + muc[0] + '</td>' + tongCell + '</tr>';
+  }).join('') + '</tbody>';
+
+// Bảng 5: thần sát
+var DOI = { 'Thiên Ất': 'Thiên Ất Quý Nhân', 'Thái Cực': 'Thái Cực Quý Nhân', 'Phúc Tinh': 'Phúc Tinh Quý Nhân', 'Khôi Cương': 'Khôi Canh', 'Thiên La': 'Thiên La Địa Võng' };
+function chuan(s) { s = s.replace(/\s*\(.*\)$/, ''); return DOI[s] || s; }
+var appDm = {}; BT.SAO.concat(BT.SAO_TRU).forEach(function (s) { appDm[s.ten] = 1; });
+var pgDm = {}; PG.forEach(function (x) { x.sao.forEach(function (l) { l.forEach(function (s) { pgDm[chuan(s)] = 1; }); }); });
+var chung = function (n) { return appDm[n] && pgDm[n]; };
+document.getElementById('pg-rieng').textContent = Object.keys(pgDm).filter(function (n) { return !appDm[n]; }).join(', ');
+document.getElementById('app-rieng').textContent = Object.keys(appDm).filter(function (n) { return !pgDm[n]; }).join(', ');
+document.getElementById('t5').innerHTML = '<thead><tr><th>Lá số</th>' + TRU.map(function (n) { return '<th>Trụ ' + n.toLowerCase() + '</th>'; }).join('') + '<th>Trùng</th></tr></thead><tbody>' +
+  rows.map(function (r) {
+    var x = r.x, trung = 0, tong = 0;
+    var cot = TRU.map(function (n, i) {
+      var p = r.ch.tuTru.filter(function (q) { return q.ten === n; })[0];
+      var a = {}, b = {};
+      p.sao.forEach(function (s) { if (chung(s.ten)) a[s.ten] = 1; });
+      x.sao[i].forEach(function (s) { var k = chuan(s); if (chung(k)) b[k] = 1; });
+      var tat = Object.keys(a).concat(Object.keys(b).filter(function (k) { return !a[k]; }));
+      tong += tat.length;
+      return '<td class="wrap-cell">' + (tat.length ? tat.map(function (k) {
+        var cls = a[k] && b[k] ? 's-ok' : a[k] ? 's-app' : 's-pg'; if (a[k] && b[k]) trung++;
+        return '<span class="' + cls + '">' + esc(k) + '</span>';
+      }).join(', ') : '<span class="tag">—</span>') + '</td>';
+    }).join('');
+    ok.sao += trung; ok.saoTong += tong;
+    return '<tr>' + who(r) + cot + '<td class="' + (trung === tong ? 'ok' : trung / tong >= .7 ? 'warn' : 'bad') + '">' + trung + '/' + tong + '</td></tr>';
+  }).join('') + '</tbody>';
+
+var n = rows.length;
+function tile(v, label, cls) { return '<div class="tile ' + cls + '"><b>' + v + '/' + n + '</b><span>' + label + '</span></div>'; }
+document.getElementById('tiles').innerHTML =
+  tile(ok.tru, 'Tứ trụ trùng khớp', ok.tru === n ? 'ok' : 'warn') +
+  tile(ok.am, 'Ngày âm lịch trùng', ok.am === n ? 'ok' : 'warn') +
+  tile(ok.thai, 'Thai nguyên và Mệnh cung trùng', ok.thai === n ? 'ok' : 'warn') +
+  tile(ok.ts, 'Trường sinh trùng', ok.ts === n ? 'ok' : 'warn') +
+  tile(ok.na, 'Nạp âm trùng (1 ca lệch do lỗi chính tả phía Phùng Gia)', ok.na === n ? 'ok' : 'warn') +
+  tile(ok.van, 'Chuỗi đại vận trùng', ok.van === n ? 'ok' : 'warn') +
+  tile(ok.khoiNam, 'Năm khởi vận trùng', ok.khoiNam === n ? 'ok' : 'warn') +
+  tile(ok.dung, 'Dụng thần Phù ức của app nằm trong nhóm có lợi của Phùng Gia', 'warn') +
+  '<div class="tile warn"><b>' + ok.sao + '/' + ok.saoTong + '</b><span>Vị trí thần sát trùng (chỉ tính sao hai bên cùng có)</span></div>';
+</script>

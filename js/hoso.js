@@ -68,7 +68,7 @@
       '</tbody></table>');
 
     // ---------- II. Cục diện ngũ hành ----------
-    var the = nh.hoTro >= 62 ? 'Cường Vượng' : nh.hoTro >= 55 ? 'Thân Vượng' : nh.hoTro >= 50 ? 'Trung Hòa Thiên Vượng' : nh.hoTro >= 45 ? 'Trung Hòa Thiên Nhược' : nh.hoTro >= 38 ? 'Thân Nhược' : 'Cực Nhược';
+    var mt = BT.mucThan(nh.hoTro), the = mt.ten;
     var thuc = (nc + 1) % 5, tai = (nc + 2) % 5;
     o.push('<h2>❖ II. PHÂN TÍCH CHUYÊN SÂU CỤC DIỆN NGŨ HÀNH &amp; NĂNG LƯỢNG</h2><div class="hs-so">' +
       '<div><b class="' + el(nc) + '">' + G[c.dg] + ' ' + H[nc] + '</b><span>NHẬT CHỦ</span></div>' +
@@ -80,9 +80,9 @@
     // 1. Bản chất nhật chủ
     var nct = V.NHAT_CHU[c.dg];
     var hienTuong = lanh ? V.HIEN_TUONG_DONG[nc] : nong ? V.HIEN_TUONG_HA[nc] :
-      (nh.ketLuan === 'Thân vượng' ? H[nc] + ' Khí Dồi Dào' : nh.ketLuan === 'Thân nhược' ? H[nc] + ' Khí Cần Nâng Đỡ' : 'Thế Cân Bằng Mong Manh');
+      (mt.key === 'vuong' ? H[nc] + ' Khí Dồi Dào' : mt.key === 'nhuoc' ? H[nc] + ' Khí Cần Nâng Đỡ' : 'Thế Cân Bằng Mong Manh');
     var soCan = c.tuTru.filter(function (t) { return t.g === c.dg; }).length;
-    var theKey = nh.hoTro >= 55 ? 'vuong' : nh.hoTro >= 45 ? 'hoa' : 'nhuoc';
+    var theKey = mt.key;
     var p1 = 'Nhật Can ' + G[c.dg] + ' ' + H[nc] + ' (' + (BT.isDuong(c.dg) ? 'Dương ' : 'Âm ') + H[nc] + ') mang hình tượng của ' + nct.hinh + '. Đặc trưng của người ' +
       G[c.dg] + ' ' + H[nc] + ' là ' + nct.tinh + '. Em sinh vào Tháng ' + Z[c.month.z] + ' (' + V.THANG[c.month.z] + '), ' +
       ([1, 4, 7, 10].indexOf(c.month.z) >= 0 && nc !== 2 ? 'thời khắc giao mùa khi Thổ khí đương lệnh' : V.TRANG_THAI_MUA[nh.trangThai[nc].ten].replace('{H}', H[nc])) + '. ' +
@@ -92,10 +92,12 @@
       (lanh ? ', ' + V.HAU_QUA_DONG.replace('{MUC}', p[1] < 3 ? 'thiếu Hỏa trầm trọng (' + pc(p[1]) + ')' : 'Hỏa khí yếu (' + pc(p[1]) + ')')
         : nong ? ', ' + V.HAU_QUA_HA.replace('{MUC}', p[4] < 3 ? 'thiếu Thủy trầm trọng (' + pc(p[4]) + ')' : 'Thủy khí yếu (' + pc(p[4]) + ')') : '.');
     var tdc = nh.tamDac;
-    var pTamDac = '<b>Đối chiếu tam đắc:</b> ' + (tdc.lenh ? 'đắc lệnh' : 'thất lệnh') + ', vì khí chính tháng là ' + tdc.khiThang + '; ' +
-      (tdc.dia ? 'đắc địa (nhật chủ có gốc tại ' + tdc.goc.cho.join(', ') + ')' : 'thất địa (nhật chủ vô căn, không có gốc ở địa chi nào)') + '; ' +
-      (tdc.the ? 'đắc thế (có ' + tdc.canTro.join(', ') + ' đỡ thân)' : 'thất thế (' + (tdc.canTro.length ? 'chỉ có ' + tdc.canTro.join(', ') : 'không có can Tỷ Kiếp, Ấn nào') + ' đỡ thân)') +
-      '. Nhật chủ đắc ' + tdc.so + '/3, ' + (tdc.so >= 2 ? 'thiên vượng' : 'thiên nhược') + ((tdc.so >= 2) === (nh.hoTro >= 50) ? ', khớp với kết quả tính điểm.' : ', khác với kết quả tính điểm (xem cảnh báo ở mục 3).');
+    var dongY = tdc.ket === 'nua' || (tdc.ket === 'vuong') === (nh.hoTro >= BT.NGUONG_VUONG);
+    var pTamDac = '<b>Đối chiếu bốn yếu tố của nhật chủ:</b> ' + (tdc.lenh ? 'được lệnh' : 'không được lệnh') + ' (chi tháng ở ' + tdc.tsThang + '); ' +
+      (tdc.dia ? 'đắc địa tại ' + tdc.diaCho.join(', ') : 'không đắc địa') + '; ' +
+      (tdc.sinh ? 'được sinh nhờ ' + tdc.sinhTu.join(', ') : 'không có Ấn sinh') + '; ' +
+      (tdc.tro ? 'được trợ giúp bởi ' + tdc.troTu.join(', ') : 'không có can Tỷ Kiếp trợ giúp') +
+      '. Theo phép này nhật chủ ' + tdc.ketTen + (dongY ? ', khớp với kết quả tính độ.' : ', khác với kết quả tính độ (xem cảnh báo ở mục 3).');
     o.push('<h4>1. Bản chất Nhật Chủ &amp; Hiện tượng "' + hienTuong + '"</h4><p>' + p1 + '</p><p>' + pTamDac + '</p>');
 
     // 2. Điểm mù
