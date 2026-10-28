@@ -87,27 +87,14 @@
     return '<div class="dt-luoi">' + hang + '</div>' +
       '<div class="ket-luan">' + dt.lyDo + (dt.ghiChuDieuHau ? '<span class="dh">' + tn('Điều hầu') + ': ' + esc(dt.ghiChuDieuHau.text) + '</span>' : '') + '</div>' +
       (dt.satNguong ? '<div class="canh-bao" role="note"><b>⚠ Sát ngưỡng.</b> ' + esc(dt.satNguong.text.replace('Kết luận sát ngưỡng: l', 'L')) + '</div>' : '') +
-      (dt.lechTamDac ? '<div class="canh-bao" role="note"><b>⚠ Tam đắc.</b> ' + esc(dt.lechTamDac) + '</div>' : '') +
       (dt.tong ? '<div class="canh-bao" role="note"><b>⚠ ' + tn('Tòng cách') + '.</b> ' + esc(dt.tong.text) + '</div>' : '') +
-      '<h4 class="tieu-nho">Ứng dụng hành có lợi</h4>' + ud +
-      '<p class="ghi-chu">Xác định theo phép Phù ức dựa trên điểm ngũ hành ở trên. Lá số đặc biệt (tòng cách, hóa khí) cần luận riêng.</p>';
+      '<h4 class="tieu-nho">Ứng dụng hành có lợi</h4>' + ud;
   }
 
-  function tamDacHtml(c) {
-    var td = c.nguHanh.tamDac;
-    function o(ok, ten, ghi) { return '<span class="td-o ' + (ok ? 'co' : 'khong') + '">' + (ok ? '✓' : '✗') + ' ' + ten + '</span>' + (ghi ? ' <small>' + esc(ghi) + '</small>' : ''); }
-    return '<span class="tam-dac">Bốn yếu tố của nhật chủ: ' +
-      o(td.lenh, 'Được lệnh', 'tháng ở ' + td.tsThang) + ' · ' +
-      o(td.dia, 'Đắc địa', td.dia ? td.diaCho.join(', ') : 'không có lộc, kình dương') + ' · ' +
-      o(td.sinh, 'Được sinh', td.sinh ? td.sinhTu.join(', ') : 'không có Ấn') + ' · ' +
-      o(td.tro, 'Được trợ', td.tro ? td.troTu.join(', ') : 'không có can Tỷ Kiếp') +
-      ' → <b>' + td.ketTen + '</b></span>';
-  }
   function cachCucHtml(c) {
     var k = c.cachCuc;
     if (!k) return '';
     return '<div class="ket-luan">' + tn('Cách cục') + ': <b>' + esc(k.ten) + ' cách</b>' +
-      (k.can != null ? ' <small>(' + BT.GAN[k.can] + (k.thau ? ' tàng trong chi tháng thấu lên thiên can' : ' là bản khí chi tháng') + ')</small>' : ' <small>(chi tháng ' + Z[c.month.z] + ')</small>') +
       (k.dac ? '<div class="canh-bao" role="note"><b>⚠ Cách đặc biệt.</b> Lá số có dấu hiệu ' + esc(k.dac.ten) + ', cần luận riêng.</div>' : '') +
       '</div>';
   }
@@ -174,7 +161,7 @@
         '<div class="cot">' +
           '<section class="giay"><div class="bang-ten">Năng lượng ngũ hành</div><div class="nh">' + bars + '</div>' +
           '<div class="ket-luan">Nhật chủ <b class="mau ' + hk(nh.nhatChu) + '">' + G[c.dg] + ' ' + BT.HANH[nh.nhatChu] + '</b> sinh mùa ' +
-          '<b class="mau ' + hk(BT.zhiHanh(c.month.z)) + '">' + BT.HANH[BT.zhiHanh(c.month.z)] + '</b>. Lực hỗ trợ (Ấn + Tỷ) <b>' + nh.hoTro.toFixed(1) + '%</b> → <strong>' + BT.mucThan(nh.hoTro).ten + '</strong>.' + tamDacHtml(c) + '</div>' + cachCucHtml(c) + '</section>' +
+          '<b class="mau ' + hk(BT.zhiHanh(c.month.z)) + '">' + BT.HANH[BT.zhiHanh(c.month.z)] + '</b> → <strong>' + BT.mucThan(nh.hoTro).ten + '</strong>.</div>' + cachCucHtml(c) + '</section>' +
           '<section class="giay"><div class="bang-ten">Hợp · Xung · Hình · Hại</div>' +
           quanHeHtml(BT.lietKeQuanHe(c.tuTru.map(function (p) { return { g: p.g, z: p.z, ten: 'Trụ ' + p.ten.toLowerCase() }; }))) + '</section>' +
         '</div>' +
@@ -242,10 +229,10 @@
       '</section>' +
       '<div class="hai-cot">' +
         '<section class="giay"><div class="bang-ten">Tuế quân theo từng trụ</div><div class="bon-cot">' + bon + '</div>' +
-          '<p class="ghi-chu">Vị trí của chi năm ' + Z[n.z] + ' so với chi mỗi trụ trong vòng 12 thần Tuế quân.</p></section>' +
+          '</section>' +
         '<section class="giay"><div class="bang-ten">Năm & vận tác động tứ trụ</div>' + quanHeHtml(ln.quanHe) + '</section>' +
       '</div>' +
-      '<section class="giay"><div class="bang-ten">Lưu nguyệt ' + S.nam + ' <small>Tháng tính theo tiết khí, giờ Việt Nam</small></div>' +
+      '<section class="giay"><div class="bang-ten">Lưu nguyệt ' + S.nam + '</div>' +
         bangTru(thangCols, { nho: true, gon: true, cls: 'van', danhGia: true }) + '</section>';
   }
 
@@ -368,14 +355,27 @@
   window.addEventListener('afterprint', function () { if (tieuDeCu) { document.title = tieuDeCu; tieuDeCu = ''; } });
 
   // ---------- Xuất ảnh ----------
+  // Ảnh lá số: luôn chụp trang Bản mệnh ở khổ rộng cố định, bỏ nút bấm, form nhập, thanh tab và các dòng hướng dẫn.
+  var BO_KHI_CHUP = '.cong-cu, #nut-sua, .tabs, #form-nhap, #loi, .giai, .bang-ten small';
   function xuatAnh() {
     if (!window.html2canvas) { $('#loi').textContent = 'Chưa tải được thư viện xuất ảnh (cần kết nối mạng).'; return; }
-    var vung = $('#vung-in');
+    var tabCu = S.tab, nut = $('#nut-anh'), chu = nut.textContent;
+    dongPop(); chonTab('ban-menh');
+    nut.disabled = true; nut.textContent = 'Đang tạo ảnh…';
     var nen = getComputedStyle(document.body).backgroundColor;
-    window.html2canvas(vung, { backgroundColor: nen, scale: 2 }).then(function (cv) {
+    window.html2canvas($('#vung-in'), {
+      backgroundColor: nen, scale: 2, windowWidth: 1200, logging: false,
+      ignoreElements: function (el) { return el.matches && el.matches(BO_KHI_CHUP); },
+      onclone: function (doc) { var w = doc.querySelector('.wrap'); w.style.width = '1100px'; w.style.maxWidth = '1100px'; }
+    }).then(function (cv) {
       var a = document.createElement('a');
-      a.download = 'la-so-' + (S.chart.inp.name || 'bat-tu').replace(/\s+/g, '-') + '-' + S.tab + '.png';
-      a.href = cv.toDataURL('image/png'); a.click();
+      a.download = 'la-so-' + (S.chart.inp.bd || S.chart.inp.name || 'bat-tu').trim().replace(/\s+/g, '-') + '.png';
+      a.href = cv.toDataURL('image/png');
+      document.body.appendChild(a); a.click(); a.remove();
+    }).catch(function () {
+      $('#loi').textContent = 'Không tạo được ảnh lá số. Hãy tải lại trang rồi thử lại.';
+    }).then(function () {
+      nut.disabled = false; nut.textContent = chu; chonTab(tabCu);
     });
   }
 

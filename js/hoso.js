@@ -91,14 +91,7 @@
       V.THE[theKey].replace('{T}', the.toUpperCase()) +
       (lanh ? ', ' + V.HAU_QUA_DONG.replace('{MUC}', p[1] < 3 ? 'thiếu Hỏa trầm trọng (' + pc(p[1]) + ')' : 'Hỏa khí yếu (' + pc(p[1]) + ')')
         : nong ? ', ' + V.HAU_QUA_HA.replace('{MUC}', p[4] < 3 ? 'thiếu Thủy trầm trọng (' + pc(p[4]) + ')' : 'Thủy khí yếu (' + pc(p[4]) + ')') : '.');
-    var tdc = nh.tamDac;
-    var dongY = tdc.ket === 'nua' || (tdc.ket === 'vuong') === (nh.hoTro >= BT.NGUONG_VUONG);
-    var pTamDac = '<b>Đối chiếu bốn yếu tố của nhật chủ:</b> ' + (tdc.lenh ? 'được lệnh' : 'không được lệnh') + ' (chi tháng ở ' + tdc.tsThang + '); ' +
-      (tdc.dia ? 'đắc địa tại ' + tdc.diaCho.join(', ') : 'không đắc địa') + '; ' +
-      (tdc.sinh ? 'được sinh nhờ ' + tdc.sinhTu.join(', ') : 'không có Ấn sinh') + '; ' +
-      (tdc.tro ? 'được trợ giúp bởi ' + tdc.troTu.join(', ') : 'không có can Tỷ Kiếp trợ giúp') +
-      '. Theo phép này nhật chủ ' + tdc.ketTen + (dongY ? ', khớp với kết quả tính độ.' : ', khác với kết quả tính độ (xem cảnh báo ở mục 3).');
-    o.push('<h4>1. Bản chất Nhật Chủ &amp; Hiện tượng "' + hienTuong + '"</h4><p>' + p1 + '</p><p>' + pTamDac + '</p>');
+    o.push('<h4>1. Bản chất Nhật Chủ &amp; Hiện tượng "' + hienTuong + '"</h4><p>' + p1 + '</p>');
 
     // 2. Điểm mù
     var w = yeuNhat, nw = nhom(w), N = V.NHOM[nw];
@@ -153,12 +146,11 @@
         '</td><td class="trai"><b>' + title + ':</b> ' + text + '</td></tr>';
     }).join('');
     o.push('<h4>3. Bảng Định Vị Hỷ - Dụng Thần &amp; Kỵ Thần</h4><table class="hs-bang hs-dt"><thead><tr><th>PHÂN LOẠI</th><th>NGŨ HÀNH</th><th>THẬP THẦN</th><th>Ý NGHĨA &amp; TÁC DỤNG CỨU ỨNG MỆNH CỤC</th></tr></thead><tbody>' + hang + '</tbody></table>' +
-      (dt.ghiChuDieuHau && !dt.ghiChuDieuHau.thieu ? '<p><b>Ghi chú Điều hầu:</b> ' + dt.ghiChuDieuHau.text.split(' Theo Phù ức')[0] + '</p>' : '') +
+      (dt.ghiChuDieuHau && !dt.ghiChuDieuHau.thieu ? '<p><b>Ghi chú Điều hầu:</b> ' + dt.ghiChuDieuHau.text.split(' Tuy vậy')[0] + '</p>' : '') +
       (dt.satNguong ? '<div class="hs-hop hs-canh-bao"><p><b>⚠ Kết luận sát ngưỡng:</b> ' + dt.satNguong.text.replace('Kết luận sát ngưỡng: l', 'L') +
         ' Vì vậy các nhận định về Hỷ, Dụng, Kỵ thần và đánh giá vận, năm bên dưới nên được xem là xu hướng tham khảo.</p></div>' : '') +
-      (dt.lechTamDac ? '<div class="hs-hop hs-canh-bao"><p><b>⚠ Tam đắc:</b> ' + dt.lechTamDac + '</p></div>' : '') +
       (dt.tong ? '<div class="hs-hop hs-canh-bao"><p><b>⚠ Khả năng Tòng cách:</b> ' + dt.tong.text +
-        ' Toàn bộ phần luận bên dưới đang theo Phù ức; nếu người luận xác định đây là ' + dt.tong.loai.toLowerCase() + ', vai trò các hành và đánh giá vận, năm sẽ đảo ngược.</p></div>' : ''));
+        ' Nếu lá số thuộc ' + dt.tong.loai.toLowerCase() + ', vai trò các hành và đánh giá vận, năm sẽ đảo ngược.</p></div>' : ''));
 
     // ---------- III. Thần sát & cung mệnh ----------
     o.push('<h2>❖ III. PHÂN TÍCH CHUYÊN SÂU THẦN SÁT &amp; CUNG MỆNH</h2>');
