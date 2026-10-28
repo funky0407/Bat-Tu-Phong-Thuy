@@ -190,6 +190,10 @@ table.tru tr.hang-sao td { vertical-align: top; }
 .tam-dac small { color: var(--muc-nhat); }
 .td-o.co { color: var(--moc); font-weight: 600; } .td-o.khong { color: var(--hoa); font-weight: 600; }
 .ghi-chu { font-size: .78rem; color: var(--muc-nhat); margin: 8px 0 0; }
+/* Khung luận giải đại vận / lưu niên */
+.luan-nd { display: grid; gap: 10px; padding: 12px 14px; border-left: 4px solid var(--vang); background: var(--giay-2); border-radius: 0 4px 4px 0; font-size: .93rem; line-height: 1.7; }
+.luan-nd p { margin: 0; max-width: 80ch; }
+.luan-nd .luan-muc { font-weight: 600; color: var(--son); display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 
 /* ---------- Dụng thần ---------- */
 .dt-luoi { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }

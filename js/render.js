@@ -87,14 +87,27 @@
     return '<div class="dt-luoi">' + hang + '</div>' +
       '<div class="ket-luan">' + dt.lyDo + (dt.ghiChuDieuHau ? '<span class="dh">' + tn('Điều hầu') + ': ' + esc(dt.ghiChuDieuHau.text) + '</span>' : '') + '</div>' +
       (dt.satNguong ? '<div class="canh-bao" role="note"><b>⚠ Sát ngưỡng.</b> ' + esc(dt.satNguong.text.replace('Kết luận sát ngưỡng: l', 'L')) + '</div>' : '') +
+      (dt.lechTamDac ? '<div class="canh-bao" role="note"><b>⚠ Tam đắc.</b> ' + esc(dt.lechTamDac) + '</div>' : '') +
       (dt.tong ? '<div class="canh-bao" role="note"><b>⚠ ' + tn('Tòng cách') + '.</b> ' + esc(dt.tong.text) + '</div>' : '') +
-      '<h4 class="tieu-nho">Ứng dụng hành có lợi</h4>' + ud;
+      '<h4 class="tieu-nho">Ứng dụng hành có lợi</h4>' + ud +
+      '<p class="ghi-chu">Xác định theo phép Phù ức dựa trên điểm ngũ hành ở trên. Lá số đặc biệt (tòng cách, hóa khí) cần luận riêng.</p>';
   }
 
+  function tamDacHtml(c) {
+    var td = c.nguHanh.tamDac;
+    function o(ok, ten, ghi) { return '<span class="td-o ' + (ok ? 'co' : 'khong') + '">' + (ok ? '✓' : '✗') + ' ' + ten + '</span>' + (ghi ? ' <small>' + esc(ghi) + '</small>' : ''); }
+    return '<span class="tam-dac">Bốn yếu tố của nhật chủ: ' +
+      o(td.lenh, 'Được lệnh', 'tháng ở ' + td.tsThang) + ' · ' +
+      o(td.dia, 'Đắc địa', td.dia ? td.diaCho.join(', ') : 'không có lộc, kình dương') + ' · ' +
+      o(td.sinh, 'Được sinh', td.sinh ? td.sinhTu.join(', ') : 'không có Ấn') + ' · ' +
+      o(td.tro, 'Được trợ', td.tro ? td.troTu.join(', ') : 'không có can Tỷ Kiếp') +
+      ' → <b>' + td.ketTen + '</b></span>';
+  }
   function cachCucHtml(c) {
     var k = c.cachCuc;
     if (!k) return '';
     return '<div class="ket-luan">' + tn('Cách cục') + ': <b>' + esc(k.ten) + ' cách</b>' +
+      (k.can != null ? ' <small>(' + BT.GAN[k.can] + (k.thau ? ' tàng trong chi tháng thấu lên thiên can' : ' là bản khí chi tháng') + ')</small>' : ' <small>(chi tháng ' + Z[c.month.z] + ')</small>') +
       (k.dac ? '<div class="canh-bao" role="note"><b>⚠ Cách đặc biệt.</b> Lá số có dấu hiệu ' + esc(k.dac.ten) + ', cần luận riêng.</div>' : '') +
       '</div>';
   }
@@ -161,7 +174,7 @@
         '<div class="cot">' +
           '<section class="giay"><div class="bang-ten">Năng lượng ngũ hành</div><div class="nh">' + bars + '</div>' +
           '<div class="ket-luan">Nhật chủ <b class="mau ' + hk(nh.nhatChu) + '">' + G[c.dg] + ' ' + BT.HANH[nh.nhatChu] + '</b> sinh mùa ' +
-          '<b class="mau ' + hk(BT.zhiHanh(c.month.z)) + '">' + BT.HANH[BT.zhiHanh(c.month.z)] + '</b> → <strong>' + BT.mucThan(nh.hoTro).ten + '</strong>.</div>' + cachCucHtml(c) + '</section>' +
+          '<b class="mau ' + hk(BT.zhiHanh(c.month.z)) + '">' + BT.HANH[BT.zhiHanh(c.month.z)] + '</b>. Lực hỗ trợ (Ấn + Tỷ) <b>' + nh.hoTro.toFixed(1) + '%</b> → <strong>' + BT.mucThan(nh.hoTro).ten + '</strong>.' + tamDacHtml(c) + '</div>' + cachCucHtml(c) + '</section>' +
           '<section class="giay"><div class="bang-ten">Hợp · Xung · Hình · Hại</div>' +
           quanHeHtml(BT.lietKeQuanHe(c.tuTru.map(function (p) { return { g: p.g, z: p.z, ten: 'Trụ ' + p.ten.toLowerCase() }; }))) + '</section>' +
         '</div>' +
@@ -196,8 +209,39 @@
       bangTru(cols, { nho: true, gon: true, cls: 'van', danhGia: true }) + '</section>' +
       '<section class="giay"><div class="bang-ten">Lưu niên trong vận ' + G[v.g] + ' ' + Z[v.z] + ' <small>' + v.namBD + '–' + v.namKT + ' · bấm một năm để xem chi tiết</small></div>' +
       '<div class="luoi-nam">' + o + '</div></section>' +
-      '<section class="giay"><div class="bang-ten">Vận ' + G[v.g] + ' ' + Z[v.z] + ' tác động tứ trụ</div>' + quanHeHtml(qh) + '</section>';
+      '<section class="giay"><div class="bang-ten">Vận ' + G[v.g] + ' ' + Z[v.z] + ' tác động tứ trụ</div>' + quanHeHtml(qh) + '</section>' +
+      luanVanHtml(c, v, nay);
   }
+
+  // ---------- Luận giải đại vận / lưu niên ----------
+  var TOT_MUC = { 'Rất thuận': 1, 'Thuận': 1 }, XAU_MUC = { 'Nghịch': 1, 'Rất nghịch': 1 };
+  function dsMoc(list, nhan) { return list.length ? '<p><b>' + nhan + ':</b> ' + list.join(', ') + '.</p>' : ''; }
+
+  function luanVanHtml(c, v, nay) {
+    var l = BT.luanDaiVan(c, v, nay), tot = [], xau = [];
+    for (var y = v.namBD; y <= v.namKT; y++) {
+      var n = { g: ((y - 4) % 10 + 10) % 10, z: ((y - 4) % 12 + 12) % 12 }, m = BT.danhGia(c, n.g, n.z).muc;
+      var nhan = y + ' (' + G[n.g] + ' ' + Z[n.z] + ')';
+      if (TOT_MUC[m]) tot.push(nhan); else if (XAU_MUC[m]) xau.push(nhan);
+    }
+    return '<section class="giay luan"><div class="bang-ten">Luận giải đại vận ' + esc(l.tieuDe) + ' <small>Bấm tiêu đề cột ở bảng trên để luận đại vận khác</small></div>' +
+      '<div class="luan-nd"><p class="luan-muc">Đánh giá chung: ' + dgHtml(BT.danhGia(c, v.g, v.z)) + '</p><p>' + l.text + '</p>' +
+      dsMoc(tot, 'Những năm thuận lợi trong vận') + dsMoc(xau, 'Những năm cần thận trọng') +
+      (tot.length || xau.length ? '' : '<p>Các năm trong vận này đều ở mức bình ổn, không có năm biến động lớn.</p>') + '</div></section>';
+  }
+
+  function luanNamHtml(c, ln) {
+    var l = BT.luanNam(c, S.nam), tot = [], xau = [];
+    ln.thang.forEach(function (t, i) {
+      var m = BT.danhGia(c, t.g, t.z).muc, nhan = 'tháng ' + G[t.g] + ' ' + Z[t.z] + ' (từ ' + pad(t.tu.d) + '/' + pad(t.tu.m) + (t.tu.y !== S.nam ? '/' + t.tu.y : '') + ')';
+      if (TOT_MUC[m]) tot.push(nhan); else if (XAU_MUC[m]) xau.push(nhan);
+    });
+    return '<section class="giay luan"><div class="bang-ten">Luận giải năm ' + S.nam + ' (' + G[l.g] + ' ' + Z[l.z] + ') <small>Chọn năm khác ở ô năm phía trên hoặc bấm một năm trong tab Đại vận</small></div>' +
+      '<div class="luan-nd"><p class="luan-muc">' + esc(hoaTieuDe(l.tieuDe)) + ' · ' + dgHtml(BT.danhGia(c, l.g, l.z)) + '</p><p>' + l.text + '</p>' +
+      dsMoc(tot, 'Tháng thuận lợi') + dsMoc(xau, 'Tháng cần thận trọng') + '</div></section>';
+  }
+  // Tiêu đề năm trong hồ sơ viết hoa toàn bộ; trên app chỉ viết hoa chữ đầu mỗi từ cho dễ đọc
+  function hoaTieuDe(s) { return s === s.toUpperCase() ? s.toLowerCase().replace(/(^|[\s(])(\S)/g, function (_, a, b) { return a + b.toUpperCase(); }) : s; }
 
   function renderLuuNien(c) {
     var ln = BT.luuNien(c, S.nam);
@@ -229,11 +273,12 @@
       '</section>' +
       '<div class="hai-cot">' +
         '<section class="giay"><div class="bang-ten">Tuế quân theo từng trụ</div><div class="bon-cot">' + bon + '</div>' +
-          '</section>' +
+          '<p class="ghi-chu">Vị trí của chi năm ' + Z[n.z] + ' so với chi mỗi trụ trong vòng 12 thần Tuế quân.</p></section>' +
         '<section class="giay"><div class="bang-ten">Năm & vận tác động tứ trụ</div>' + quanHeHtml(ln.quanHe) + '</section>' +
       '</div>' +
-      '<section class="giay"><div class="bang-ten">Lưu nguyệt ' + S.nam + '</div>' +
-        bangTru(thangCols, { nho: true, gon: true, cls: 'van', danhGia: true }) + '</section>';
+      '<section class="giay"><div class="bang-ten">Lưu nguyệt ' + S.nam + ' <small>Tháng tính theo tiết khí, giờ Việt Nam</small></div>' +
+        bangTru(thangCols, { nho: true, gon: true, cls: 'van', danhGia: true }) + '</section>' +
+      luanNamHtml(c, ln);
   }
 
   function render() {

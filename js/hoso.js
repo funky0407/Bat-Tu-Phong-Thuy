@@ -10,6 +10,116 @@
   function gz(g, z) { return G[g] + ' ' + Z[z]; }
   function el(e) { return 'hs-' + BT.HANH_KEY[e]; }
 
+  // Hàm phụ dùng chung cho hồ sơ và phần luận đại vận / lưu niên trên app
+  function congCu(c) {
+    var nc = BT.ganHanh(c.dg), dt = c.dungThan, nam = c.inp.gender === 1;
+    return {
+      nhom: function (e) { return (e - nc + 5) % 5; },
+      vaiTen: function (e) { return ['Dụng Thần', 'Hỷ Thần', 'Kỵ Thần', 'Cừu Thần', 'Nhàn Thần'][dt.vai[e]]; },
+      tot: function (e) { return dt.vai[e] < 2; },
+      xau: function (e) { return dt.vai[e] === 2 || dt.vai[e] === 3; },
+      VO_VAN: nam ? ', tình duyên rộng mở' : '',
+      VO_NAM: nam ? ', tình duyên bừng sáng' : ''
+    };
+  }
+  function namGz(y) { return { g: ((y - 4) % 10 + 10) % 10, z: ((y - 4) % 12 + 12) % 12 }; }
+
+  // Luận một đại vận bất kỳ, xét theo năm Y (năm đang xem): vận đang chạy, đã qua hoặc sắp tới.
+  BT.luanDaiVan = function (c, van, Y) {
+    V = BT.VAN;
+    var k = congCu(c), tot = k.tot, xau = k.xau, vaiTen = k.vaiTen, nhom = k.nhom, iv = c.daiVan.indexOf(van);
+    var dv = BT.danhGia(c, van.g, van.z), ttg = TT[van.tt], ttz = TT[van.tang[0].tt];
+    var dang = Y >= van.namBD && Y <= van.namKT, qua = Y > van.namKT;
+    var kk = Y - van.namBD, viTri = kk <= 2 ? 'những năm đầu' : kk <= 6 ? 'giữa chặng' : 'những năm cuối cùng';
+    var hanhVan = [BT.ganHanh(van.g), BT.zhiHanh(van.z)];
+    var hTot = hanhVan.filter(function (e, i, a) { return tot(e) && a.indexOf(e) === i; }).map(function (e) { return H[e]; }).join(', ');
+    var hXau = hanhVan.filter(function (e, i, a) { return xau(e) && a.indexOf(e) === i; }).map(function (e) { return H[e]; }).join(', ');
+    var ez = BT.zhiHanh(van.z), eg = BT.ganHanh(van.g);
+    // câu luận cho một hành của vận: tốt → VAN_TOT, xấu → VAN_XAU, Nhàn thần → không có tác động rõ
+    function cauVan(e) { return tot(e) ? V.VAN_TOT[nhom(e)].replace('{VO}', k.VO_VAN) : xau(e) ? V.VAN_XAU[nhom(e)] : null; }
+    var cz = cauVan(ez), cg = cauVan(eg);
+    var moDau = dang ? 'Bạn đang ở ' + viTri + ' của đại vận '
+      : qua ? 'Giai đoạn ' + van.namBD + ' - ' + van.namKT + ', bạn đã đi qua đại vận '
+        : 'Từ năm ' + van.namBD + ' (' + van.tuoi + ' tuổi), bạn bước vào đại vận ';
+    var tx = moDau + gz(van.g, van.z) + ' (can ' + G[van.g] + ' ' + H[eg] + ' – ' + ttg + ', ' + vaiTen(eg) +
+      '; chi ' + Z[van.z] + ' ' + H[ez] + ' – ' + ttz + ', ' + vaiTen(ez) + '). ' +
+      V.VAN_MUC[dv.muc].replace('{H}', dv.diem > 0 ? hTot : hXau) + ' ' +
+      (qua || (dang && kk >= 7) ? 'Giai đoạn 10 năm này, ' : 'Trong giai đoạn này, ');
+    if (cz) tx += thuong(cz) + (cg && cg !== cz ? ' Song song đó, ' + thuong(cg) : '');
+    else if (cg) tx += thuong(cg) + ' Địa chi ' + Z[van.z] + ' là Nhàn Thần nên không tạo thêm tác động rõ rệt.';
+    else tx += 'cả can lẫn chi đều là Nhàn Thần, vận trình ít biến động lớn.';
+    var qhv = BT.quanHeHaiTru({ g: van.g, z: van.z }, { g: c.day.g, z: c.day.z });
+    qhv.forEach(function (q) {
+      if (q.text.indexOf('lục xung') >= 0) tx += ' Vận ' + Z[van.z] + ' xung chi ngày ' + Z[c.day.z] + ', chuyện bản thân và hôn nhân dễ có biến động.';
+      if (q.text.indexOf('tương xung') >= 0) tx += ' Can vận ' + G[van.g] + ' xung can ngày ' + G[c.day.g] + ', dễ có áp lực, va chạm trực diện.';
+      if (q.text.indexOf('lục hợp') >= 0) tx += ' Vận ' + Z[van.z] + ' lục hợp với chi ngày ' + Z[c.day.z] + ', các mối quan hệ thân thiết được gắn kết.';
+    });
+    var sau = c.daiVan[iv + 1];
+    if (sau && dang && van.namKT - Y <= 2) {
+      var ds2 = BT.danhGia(c, sau.g, sau.z);
+      var sauTxt = 'đại vận ' + gz(sau.g, sau.z) + ' (' + sau.namBD + ' - ' + sau.namKT + ', ' + ds2.muc.toLowerCase() + ')';
+      tx += ds2.diem > dv.diem + 0.3 ? (dv.diem < 0.4 ? ' Tuy nhiên, giai đoạn chịu đựng này sắp kết thúc để nhường chỗ cho ' : ' Phía trước còn thuận lợi hơn: ') + sauTxt + '.'
+        : ds2.diem < dv.diem - 0.3 ? ' Từ năm ' + sau.namBD + ', bạn bước sang ' + sauTxt + ', cần chuẩn bị kỹ lưỡng từ bây giờ: tích lũy, giữ sức khỏe và các mối quan hệ quý.'
+          : ' Từ năm ' + sau.namBD + ', ' + sauTxt + ' tiếp nối với nhịp độ tương tự.';
+    }
+    return { tieuDe: gz(van.g, van.z) + ' (' + van.namBD + ' - ' + van.namKT + ' | ' + van.tuoi + ' - ' + (van.tuoi + 9) + ' tuổi)', text: tx, muc: dv.muc };
+  };
+
+  // Luận một năm (lưu niên) bất kỳ: tiêu đề, đoạn luận, thập thần của can và chi năm.
+  BT.luanNam = function (c, y) {
+    V = BT.VAN;
+    var k = congCu(c), tot = k.tot, xau = k.xau, vaiTen = k.vaiTen;
+    var n = namGz(y), g = n.g, z = n.z;
+    var d = BT.danhGia(c, g, z), eg = BT.ganHanh(g), ez = BT.zhiHanh(z);
+    var tg = BT.thapThan(c.dg, g), tz = BT.thapThan(c.dg, BT.TANG_CAN[z][0]);
+    var vy = BT.vanCuaNam(c, y), moi = c.daiVan.filter(function (v) { return v.namBD === y; })[0];
+    function cau(e, ttIdx, ten) {
+      var r = Math.floor(ttIdx / 2);
+      if (tot(e)) return ten + ' (' + TT[ttIdx] + ') là ' + vaiTen(e) + ', ' + V.NAM_TOT[r].replace('{VO}', k.VO_NAM);
+      if (xau(e)) return ten + ' (' + TT[ttIdx] + ') thuộc ' + vaiTen(e) + ', ' + V.NAM_XAU[r];
+      return ten + ' (' + TT[ttIdx] + ') giữ thế trung tính';
+    }
+    var tx = eg === ez && Math.floor(tg / 2) === Math.floor(tz / 2)
+      ? G[g] + ' ' + H[eg] + ' và ' + Z[z] + ' ' + H[ez] + ' cùng xuất hiện, ' + (tot(eg) ? vaiTen(eg) + ' được nhân đôi sức mạnh: ' + V.NAM_TOT[Math.floor(tg / 2)].replace('{VO}', k.VO_NAM) : xau(eg) ? vaiTen(eg) + ' dồn dập: ' + V.NAM_XAU[Math.floor(tg / 2)] : 'năng lượng trung tính') + '.'
+      : cau(eg, tg, G[g] + ' ' + H[eg]) + '. ' + cau(ez, tz, Z[z] + ' ' + H[ez]) + '.';
+    var xungs = [], hops = [], tonNgay = [];
+    c.tuTru.forEach(function (t) {
+      BT.quanHeHaiTru({ g: g, z: z }, { g: t.g, z: t.z }).forEach(function (q) {
+        if (q.loai === 'xung' && q.text.indexOf('lục xung') >= 0) xungs.push({ chi: Z[t.z], mien: V.TRU_MIEN[t.ten.toLowerCase()], ten: 'trụ ' + t.ten.toLowerCase() });
+        if (q.loai === 'hop' && q.text.indexOf('lục hợp') >= 0 && t.ten === 'Ngày') hops.push(Z[t.z]);
+        if ((q.loai === 'hai' || q.loai === 'hinh' || q.loai === 'pha') && t.ten === 'Ngày') tonNgay.push(q);
+      });
+    });
+    if (vy) BT.quanHeHaiTru({ g: g, z: z }, { g: vy.g, z: vy.z }).forEach(function (q) {
+      if (q.loai === 'xung' && q.text.indexOf('lục xung') >= 0) xungs.unshift({ chi: Z[vy.z], mien: 'chỗ ở, công việc', ten: 'đại vận' });
+    });
+    if (z === c.year.z) tx += ' Năm trùng tuổi (phạm Thái Tuế), nên giữ ổn định, tránh quyết định vội vàng.';
+    var theoChi = {};
+    xungs.forEach(function (x) { (theoChi[x.chi] = theoChi[x.chi] || []).push(x); });
+    Object.keys(theoChi).forEach(function (chi, i) {
+      var ds = theoChi[chi];
+      tx += ' ' + (i ? 'Đồng thời' : 'Tuy nhiên') + ', ' + Z[z] + ' xung ' + chi + ' (' + ds.map(function (x) { return x.ten; }).join(', ') + '), sẽ có sự biến động lớn về ' + ds.map(function (x) { return x.mien; }).join('; ') + '.';
+    });
+    hops.forEach(function (h) { tx += ' ' + Z[z] + ' lục hợp ' + h + ' (cung phu thê), thuận cho tình cảm và hợp tác.'; });
+    if (tonNgay.length) {
+      var yNghia = { hai: 'hiểu lầm, tiểu nhân ngấm ngầm', hinh: 'va chạm, thị phi', pha: 'đổ vỡ nhỏ, kế hoạch dở dang' };
+      tx += ' Chi năm với chi ngày (cung phu thê): ' + tonNgay.map(function (q) { return q.text; }).join(', ') + ', cần đề phòng ' +
+        tonNgay.map(function (q) { return yNghia[q.loai]; }).filter(function (s, i, a) { return a.indexOf(s) === i; }).join(', ') + ', nhất là trong chuyện bản thân và hôn nhân.';
+    }
+    var title;
+    if (moi) {
+      title = 'Chuyển Giao Đại Vận ' + gz(moi.g, moi.z);
+      tx += ' Bạn chính thức bước vào 10 năm đại vận ' + gz(moi.g, moi.z) + ' (' + BT.danhGia(c, moi.g, moi.z).muc.toLowerCase() + ').';
+    } else if (xungs.length && (xungs[0].ten === 'đại vận' || xungs[0].ten === 'trụ ngày')) {
+      title = 'NĂM ĐẠI BIẾN ĐỘNG (XUNG ' + xungs[0].chi.toUpperCase() + (d.diem >= 0.4 ? ' - ĐÓN ' + H[ez].toUpperCase() : '') + ')';
+    } else {
+      title = V.NAM_TIEU_DE[d.muc] + (eg === ez && d.muc === 'Rất thuận' ? ' (' + V.NAM_DINH_CAO[Math.floor(tg / 2)] + ' ĐỈNH CAO)' : '');
+    }
+    tx += ' ' + (moi && d.diem >= 0.4 && BT.danhGia(c, moi.g, moi.z).diem < 0
+      ? 'Bản thân năm này vẫn thuận lợi, hãy tận dụng để tích lũy và chuẩn bị hành trang cho chặng đường mới.' : V.NAM_KET[d.muc]);
+    return { g: g, z: z, tg: tg, tz: tz, tieuDe: title, text: tx, muc: d.muc };
+  };
+
   BT.taoHoSo = function (c, opt) {
     V = BT.VAN;
     var inp = c.inp, gt = inp.gender === 1 ? 'nam' : 'nu';
@@ -91,7 +201,14 @@
       V.THE[theKey].replace('{T}', the.toUpperCase()) +
       (lanh ? ', ' + V.HAU_QUA_DONG.replace('{MUC}', p[1] < 3 ? 'thiếu Hỏa trầm trọng (' + pc(p[1]) + ')' : 'Hỏa khí yếu (' + pc(p[1]) + ')')
         : nong ? ', ' + V.HAU_QUA_HA.replace('{MUC}', p[4] < 3 ? 'thiếu Thủy trầm trọng (' + pc(p[4]) + ')' : 'Thủy khí yếu (' + pc(p[4]) + ')') : '.');
-    o.push('<h4>1. Bản chất Nhật Chủ &amp; Hiện tượng "' + hienTuong + '"</h4><p>' + p1 + '</p>');
+    var tdc = nh.tamDac;
+    var dongY = tdc.ket === 'nua' || (tdc.ket === 'vuong') === (nh.hoTro >= BT.NGUONG_VUONG);
+    var pTamDac = '<b>Đối chiếu bốn yếu tố của nhật chủ:</b> ' + (tdc.lenh ? 'được lệnh' : 'không được lệnh') + ' (chi tháng ở ' + tdc.tsThang + '); ' +
+      (tdc.dia ? 'đắc địa tại ' + tdc.diaCho.join(', ') : 'không đắc địa') + '; ' +
+      (tdc.sinh ? 'được sinh nhờ ' + tdc.sinhTu.join(', ') : 'không có Ấn sinh') + '; ' +
+      (tdc.tro ? 'được trợ giúp bởi ' + tdc.troTu.join(', ') : 'không có can Tỷ Kiếp trợ giúp') +
+      '. Theo phép này nhật chủ ' + tdc.ketTen + (dongY ? ', khớp với kết quả tính độ.' : ', khác với kết quả tính độ (xem cảnh báo ở mục 3).');
+    o.push('<h4>1. Bản chất Nhật Chủ &amp; Hiện tượng "' + hienTuong + '"</h4><p>' + p1 + '</p><p>' + pTamDac + '</p>');
 
     // 2. Điểm mù
     var w = yeuNhat, nw = nhom(w), N = V.NHOM[nw];
@@ -146,11 +263,12 @@
         '</td><td class="trai"><b>' + title + ':</b> ' + text + '</td></tr>';
     }).join('');
     o.push('<h4>3. Bảng Định Vị Hỷ - Dụng Thần &amp; Kỵ Thần</h4><table class="hs-bang hs-dt"><thead><tr><th>PHÂN LOẠI</th><th>NGŨ HÀNH</th><th>THẬP THẦN</th><th>Ý NGHĨA &amp; TÁC DỤNG CỨU ỨNG MỆNH CỤC</th></tr></thead><tbody>' + hang + '</tbody></table>' +
-      (dt.ghiChuDieuHau && !dt.ghiChuDieuHau.thieu ? '<p><b>Ghi chú Điều hầu:</b> ' + dt.ghiChuDieuHau.text.split(' Tuy vậy')[0] + '</p>' : '') +
+      (dt.ghiChuDieuHau && !dt.ghiChuDieuHau.thieu ? '<p><b>Ghi chú Điều hầu:</b> ' + dt.ghiChuDieuHau.text.split(' Theo Phù ức')[0] + '</p>' : '') +
       (dt.satNguong ? '<div class="hs-hop hs-canh-bao"><p><b>⚠ Kết luận sát ngưỡng:</b> ' + dt.satNguong.text.replace('Kết luận sát ngưỡng: l', 'L') +
         ' Vì vậy các nhận định về Hỷ, Dụng, Kỵ thần và đánh giá vận, năm bên dưới nên được xem là xu hướng tham khảo.</p></div>' : '') +
+      (dt.lechTamDac ? '<div class="hs-hop hs-canh-bao"><p><b>⚠ Tam đắc:</b> ' + dt.lechTamDac + '</p></div>' : '') +
       (dt.tong ? '<div class="hs-hop hs-canh-bao"><p><b>⚠ Khả năng Tòng cách:</b> ' + dt.tong.text +
-        ' Nếu lá số thuộc ' + dt.tong.loai.toLowerCase() + ', vai trò các hành và đánh giá vận, năm sẽ đảo ngược.</p></div>' : ''));
+        ' Toàn bộ phần luận bên dưới đang theo Phù ức; nếu người luận xác định đây là ' + dt.tong.loai.toLowerCase() + ', vai trò các hành và đánh giá vận, năm sẽ đảo ngược.</p></div>' : ''));
 
     // ---------- III. Thần sát & cung mệnh ----------
     o.push('<h2>❖ III. PHÂN TÍCH CHUYÊN SÂU THẦN SÁT &amp; CUNG MỆNH</h2>');
@@ -234,96 +352,18 @@
     var van = BT.vanCuaNam(c, Y), iv = c.daiVan.indexOf(van);
     o.push('<h2>❖ V. LUẬN GIẢI ĐẠI VẬN &amp; LƯU NIÊN TRỌNG TÂM (' + (Y - 2) + ' - ' + (Y + 1) + ')</h2>');
     if (van) {
-      var dv = BT.danhGia(c, van.g, van.z), ttg = TT[van.tt], ttz = TT[van.tang[0].tt];
-      var k = Y - van.namBD, viTri = k <= 2 ? 'những năm đầu' : k <= 6 ? 'giữa chặng' : 'những năm cuối cùng';
-      var hanhVan = [BT.ganHanh(van.g), BT.zhiHanh(van.z)];
-      var hTot = hanhVan.filter(function (e, i, a) { return tot(e) && a.indexOf(e) === i; }).map(function (e) { return H[e]; }).join(', ');
-      var hXau = hanhVan.filter(function (e, i, a) { return xau(e) && a.indexOf(e) === i; }).map(function (e) { return H[e]; }).join(', ');
-      var ez = BT.zhiHanh(van.z), eg = BT.ganHanh(van.g);
-      // câu luận cho một hành của vận: tốt → VAN_TOT, xấu → VAN_XAU, Nhàn thần → không có tác động rõ
-      function cauVan(e) { return tot(e) ? V.VAN_TOT[nhom(e)].replace('{VO}', VO_VAN) : xau(e) ? V.VAN_XAU[nhom(e)] : null; }
-      var cz = cauVan(ez), cg = cauVan(eg);
-      var tx = 'Bạn đang ở ' + viTri + ' của đại vận ' + gz(van.g, van.z) + ' (can ' + G[van.g] + ' ' + H[eg] + ' – ' + ttg + ', ' + vaiTen(eg) +
-        '; chi ' + Z[van.z] + ' ' + H[ez] + ' – ' + ttz + ', ' + vaiTen(ez) + '). ' +
-        V.VAN_MUC[dv.muc].replace('{H}', dv.diem > 0 ? hTot : hXau) + ' ' +
-        (k >= 7 ? 'Giai đoạn 10 năm qua, ' : 'Trong giai đoạn này, ');
-      if (cz) tx += thuong(cz) + (cg && cg !== cz ? ' Song song đó, ' + thuong(cg) : '');
-      else if (cg) tx += thuong(cg) + ' Địa chi ' + Z[van.z] + ' là Nhàn Thần nên không tạo thêm tác động rõ rệt.';
-      else tx += 'cả can lẫn chi đều là Nhàn Thần, vận trình ít biến động lớn.';
-      var qhv = BT.quanHeHaiTru({ g: van.g, z: van.z }, { g: c.day.g, z: c.day.z });
-      qhv.forEach(function (q) {
-        if (q.text.indexOf('lục xung') >= 0) tx += ' Vận ' + Z[van.z] + ' xung chi ngày ' + Z[c.day.z] + ', chuyện bản thân và hôn nhân dễ có biến động.';
-        if (q.text.indexOf('tương xung') >= 0) tx += ' Can vận ' + G[van.g] + ' xung can ngày ' + G[c.day.g] + ', dễ có áp lực, va chạm trực diện.';
-        if (q.text.indexOf('lục hợp') >= 0) tx += ' Vận ' + Z[van.z] + ' lục hợp với chi ngày ' + Z[c.day.z] + ', các mối quan hệ thân thiết được gắn kết.';
-      });
-      var sau = c.daiVan[iv + 1];
-      if (sau && van.namKT - Y <= 2) {
-        var ds2 = BT.danhGia(c, sau.g, sau.z);
-        var sauTxt = 'đại vận ' + gz(sau.g, sau.z) + ' (' + sau.namBD + ' - ' + sau.namKT + ', ' + ds2.muc.toLowerCase() + ')';
-        tx += ds2.diem > dv.diem + 0.3 ? (dv.diem < 0.4 ? ' Tuy nhiên, giai đoạn chịu đựng này sắp kết thúc để nhường chỗ cho ' : ' Phía trước còn thuận lợi hơn: ') + sauTxt + '.'
-          : ds2.diem < dv.diem - 0.3 ? ' Từ năm ' + sau.namBD + ', bạn bước sang ' + sauTxt + ', cần chuẩn bị kỹ lưỡng từ bây giờ: tích lũy, giữ sức khỏe và các mối quan hệ quý.'
-            : ' Từ năm ' + sau.namBD + ', ' + sauTxt + ' tiếp nối với nhịp độ tương tự.';
-      }
-      o.push('<h4>1. Chu Kỳ Đại Vận Hiện Tại: ' + gz(van.g, van.z) + ' (' + van.namBD + ' - ' + van.namKT + ' | ' + van.tuoi + ' - ' + (van.tuoi + 9) + ' tuổi)</h4><p>' + tx + '</p>');
+      var lv = BT.luanDaiVan(c, van, Y);
+      o.push('<h4>1. Chu Kỳ Đại Vận Hiện Tại: ' + lv.tieuDe + '</h4><p>' + lv.text + '</p>');
     } else {
       o.push('<h4>1. Giai Đoạn Trước Khởi Vận</h4><p>Bạn chưa bước vào đại vận đầu tiên (khởi vận năm ' + c.daiVan[0].namBD + '). Giai đoạn này vận trình chịu ảnh hưởng chủ yếu từ trụ tháng và môi trường gia đình.</p>');
     }
 
     var hangNam = [];
-    for (var y = Y - 2; y <= Y + 1; y++) hangNam.push(luanNam(y));
-    o.push('<h4>2. Luận Giải Chi Tiết Các Lưu Niên Bước Ngoặt</h4><table class="hs-bang hs-ln"><thead><tr><th>LƯU NIÊN</th><th>THẬP THẦN</th><th>PHÂN TÍCH CHI TIẾT &amp; XU HƯỚNG VẬN TRÌNH</th></tr></thead><tbody>' + hangNam.join('') + '</tbody></table>');
-
-    function luanNam(y) {
-      var g = ((y - 4) % 10 + 10) % 10, z = ((y - 4) % 12 + 12) % 12;
-      var d = BT.danhGia(c, g, z), eg = BT.ganHanh(g), ez = BT.zhiHanh(z);
-      var tg = BT.thapThan(c.dg, g), tz = BT.thapThan(c.dg, BT.TANG_CAN[z][0]);
-      var vy = BT.vanCuaNam(c, y), moi = c.daiVan.filter(function (v) { return v.namBD === y; })[0];
-      function cau(e, ttIdx, ten) {
-        var r = Math.floor(ttIdx / 2);
-        if (tot(e)) return ten + ' (' + TT[ttIdx] + ') là ' + vaiTen(e) + ', ' + V.NAM_TOT[r].replace('{VO}', VO_NAM);
-        if (xau(e)) return ten + ' (' + TT[ttIdx] + ') thuộc ' + vaiTen(e) + ', ' + V.NAM_XAU[r];
-        return ten + ' (' + TT[ttIdx] + ') giữ thế trung tính';
-      }
-      var tx = eg === ez && Math.floor(tg / 2) === Math.floor(tz / 2)
-        ? G[g] + ' ' + H[eg] + ' và ' + Z[z] + ' ' + H[ez] + ' cùng xuất hiện, ' + (tot(eg) ? vaiTen(eg) + ' được nhân đôi sức mạnh: ' + V.NAM_TOT[Math.floor(tg / 2)].replace('{VO}', VO_NAM) : xau(eg) ? vaiTen(eg) + ' dồn dập: ' + V.NAM_XAU[Math.floor(tg / 2)] : 'năng lượng trung tính') + '.'
-        : cau(eg, tg, G[g] + ' ' + H[eg]) + '. ' + cau(ez, tz, Z[z] + ' ' + H[ez]) + '.';
-      var xungs = [], hops = [], tonNgay = [];
-      c.tuTru.forEach(function (t) {
-        BT.quanHeHaiTru({ g: g, z: z }, { g: t.g, z: t.z }).forEach(function (q) {
-          if (q.loai === 'xung' && q.text.indexOf('lục xung') >= 0) xungs.push({ chi: Z[t.z], mien: V.TRU_MIEN[t.ten.toLowerCase()], ten: 'trụ ' + t.ten.toLowerCase() });
-          if (q.loai === 'hop' && q.text.indexOf('lục hợp') >= 0 && t.ten === 'Ngày') hops.push(Z[t.z]);
-          if ((q.loai === 'hai' || q.loai === 'hinh' || q.loai === 'pha') && t.ten === 'Ngày') tonNgay.push(q);
-        });
-      });
-      if (vy) BT.quanHeHaiTru({ g: g, z: z }, { g: vy.g, z: vy.z }).forEach(function (q) {
-        if (q.loai === 'xung' && q.text.indexOf('lục xung') >= 0) xungs.unshift({ chi: Z[vy.z], mien: 'chỗ ở, công việc', ten: 'đại vận' });
-      });
-      if (z === c.year.z) tx += ' Năm trùng tuổi (phạm Thái Tuế), nên giữ ổn định, tránh quyết định vội vàng.';
-      var theoChi = {};
-      xungs.forEach(function (x) { (theoChi[x.chi] = theoChi[x.chi] || []).push(x); });
-      Object.keys(theoChi).forEach(function (chi, i) {
-        var ds = theoChi[chi];
-        tx += ' ' + (i ? 'Đồng thời' : 'Tuy nhiên') + ', ' + Z[z] + ' xung ' + chi + ' (' + ds.map(function (x) { return x.ten; }).join(', ') + '), sẽ có sự biến động lớn về ' + ds.map(function (x) { return x.mien; }).join('; ') + '.';
-      });
-      hops.forEach(function (h) { tx += ' ' + Z[z] + ' lục hợp ' + h + ' (cung phu thê), thuận cho tình cảm và hợp tác.'; });
-      if (tonNgay.length) {
-        var yNghia = { hai: 'hiểu lầm, tiểu nhân ngấm ngầm', hinh: 'va chạm, thị phi', pha: 'đổ vỡ nhỏ, kế hoạch dở dang' };
-        tx += ' Chi năm với chi ngày (cung phu thê): ' + tonNgay.map(function (q) { return q.text; }).join(', ') + ', cần đề phòng ' +
-          tonNgay.map(function (q) { return yNghia[q.loai]; }).filter(function (s, i, a) { return a.indexOf(s) === i; }).join(', ') + ', nhất là trong chuyện bản thân và hôn nhân.';
-      }
-      var title;
-      if (moi) {
-        title = 'Chuyển Giao Đại Vận ' + gz(moi.g, moi.z);
-        tx += ' Bạn chính thức bước vào 10 năm đại vận ' + gz(moi.g, moi.z) + ' (' + BT.danhGia(c, moi.g, moi.z).muc.toLowerCase() + ').';
-      } else if (xungs.length && (xungs[0].ten === 'đại vận' || xungs[0].ten === 'trụ ngày')) {
-        title = 'NĂM ĐẠI BIẾN ĐỘNG (XUNG ' + xungs[0].chi.toUpperCase() + (d.diem >= 0.4 ? ' - ĐÓN ' + H[ez].toUpperCase() : '') + ')';
-      } else {
-        title = V.NAM_TIEU_DE[d.muc] + (eg === ez && d.muc === 'Rất thuận' ? ' (' + V.NAM_DINH_CAO[Math.floor(tg / 2)] + ' ĐỈNH CAO)' : '');
-      }
-      tx += ' ' + (moi && d.diem >= 0.4 && BT.danhGia(c, moi.g, moi.z).diem < 0
-        ? 'Bản thân năm này vẫn thuận lợi, hãy tận dụng để tích lũy và chuẩn bị hành trang cho chặng đường mới.' : V.NAM_KET[d.muc]);
-      return '<tr><td><b>' + y + '</b><br>(' + gz(g, z) + ')</td><td>' + TT[tg] + '<br>' + TT[tz] + '</td><td class="trai"><b>' + title + ':</b> ' + tx + '</td></tr>';
+    for (var y = Y - 2; y <= Y + 1; y++) {
+      var ln = BT.luanNam(c, y);
+      hangNam.push('<tr><td><b>' + y + '</b><br>(' + gz(ln.g, ln.z) + ')</td><td>' + TT[ln.tg] + '<br>' + TT[ln.tz] + '</td><td class="trai"><b>' + ln.tieuDe + ':</b> ' + ln.text + '</td></tr>');
     }
+    o.push('<h4>2. Luận Giải Chi Tiết Các Lưu Niên Bước Ngoặt</h4><table class="hs-bang hs-ln"><thead><tr><th>LƯU NIÊN</th><th>THẬP THẦN</th><th>PHÂN TÍCH CHI TIẾT &amp; XU HƯỚNG VẬN TRÌNH</th></tr></thead><tbody>' + hangNam.join('') + '</tbody></table>');
 
     // ---------- VI. Cải vận ----------
     var hyDs = dt.ds.filter(function (x) { return x.vai === 1; }).map(function (x) { return x.e; });

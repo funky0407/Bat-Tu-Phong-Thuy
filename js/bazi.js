@@ -384,7 +384,7 @@
     var cd = chart.nguHanh && chart.nguHanh.do && chart.nguHanh.do.chi;
     chiKhac.forEach(function (p) {
       var f = cd && cd[viTri[p.ten]];
-      if (f && (f.hoa >= 0 || f.khuBi || f.xung)) return; // chi đã hợp hoặc bị xung thì mất gốc (sách tr.184: Tý Sửu hợp nên mất)
+      if (f && (f.hoa >= 0 || f.khuBi || f.xung)) return; // chi đã hợp hoặc bị xung thì mất gốc
       var t = BT.truongSinh(dg, p.z);
       if (t === 3 || t === 4 || (duong && (t === 0 || t === 8))) diaCho.push(BT.ZHI[p.z] + ' (trụ ' + p.ten.toLowerCase() + ', ' + TEN_TS[t] + ')');
     });
@@ -525,10 +525,10 @@
     var td = nh.tamDac, tong = null, tuTru = chart.tuTru, dac = chart.cachCuc && chart.cachCuc.dac;
     if (dac) {
       tong = { loai: dac.ten, chan: false, D2: dac.D, hy2: dac.hy,
-        text: 'Có dấu hiệu cách đặc biệt ' + dac.ten + ' ' + (dac.loai === 'hoa'
+        text: 'Có dấu hiệu cách đặc biệt ' + dac.ten + ': ' + (dac.loai === 'hoa'
           ? 'nhật chủ hợp hóa thành ' + H[dac.D] + ' thành công, lá số theo thế hóa khí.'
           : 'một hành độc vượng (' + nh.hoTro + '% thuộc phe nhật chủ), không có hành khắc chế.') +
-          ' Nếu luận theo cách này, Dụng thần là ' + H[dac.D] + ', Hỷ thần là ' + H[dac.hy] + '; khác với Dụng thần ở trên.' };
+          ' Nếu luận theo cách này, Dụng thần là ' + H[dac.D] + ', Hỷ thần là ' + H[dac.hy] + '; khác với kết quả Phù ức ở trên.' };
     } else {
       var canTroTru = tuTru.filter(function (q) { return q.ten !== 'Ngày' && (BT.ganHanh(q.g) === ty || BT.ganHanh(q.g) === an); });
       var chiTangAn = tuTru.some(function (q) { return BT.TANG_CAN[q.z].some(function (tg) { return BT.ganHanh(tg) === an; }); });
@@ -542,12 +542,12 @@
         var chan = voCan && canTroTru.length === 0;
         tong = { loai: tt[0], chan: chan, D2: tt[2], hy2: tt[3],
           text: (chan ? 'Có dấu hiệu Chân tòng' : 'Có dấu hiệu Giả tòng') + ' (' + tt[0] + '): ' + (cucNhuoc
-            ? 'nhật chủ ' + BT.GAN[chart.dg] + ' rất yếu, Tỷ Kiếp và Ấn chỉ chiếm ' + nh.hoTro + '% lá số.'
+            ? 'sau khi tính hợp hóa, xung và khắc, phe nhật chủ ' + BT.GAN[chart.dg] + ' (Tỷ Kiếp + Ấn) chỉ còn ' + nh.hoTro + '% tổng độ, dưới mức 20%.'
             : 'nhật chủ ' + BT.GAN[chart.dg] + ' vô căn, địa chi không tàng Ấn' +
             (chan ? ', thiên can không có Tỷ Kiếp hay Ấn.' : ', các can ' + canTroTru.map(function (q) { return BT.GAN[q.g]; }).join(', ') + ' đỡ thân đều vô căn, lực hỗ trợ chỉ ' + nh.hoTro + '%.')) +
             ' Nếu luận Tòng, lá số thuận theo ' + tt[1] + ' (' + H[theo] + ') đang mạnh nhất: Dụng thần là ' + H[tt[2]] + ', Hỷ thần là ' + H[tt[3]] +
-            ', kỵ Ấn và Tỷ Kiếp; ngược hẳn với Dụng thần ở trên.' +
-            (chan ? '' : ' Giả tòng chỉ thành khi các can đỡ thân bị khắc chế; nếu Ấn hoặc Tỷ được vận, năm sinh trợ thì vẫn giữ Dụng thần ở trên.') };
+            ', kỵ Ấn và Tỷ Kiếp; ngược hẳn với kết quả Phù ức ở trên.' +
+            (chan ? '' : ' Giả tòng chỉ thành khi các can đỡ thân bị khắc chế; nếu Ấn hoặc Tỷ được vận, năm sinh trợ thì vẫn luận theo Phù ức.') };
       }
     }
 
@@ -568,7 +568,7 @@
         dieuHau = { e: eDH, text: dongSinh ? 'Sinh mùa đông, lá số lạnh và thiếu Hỏa: cần Hỏa để điều hòa khí hậu.' : 'Sinh mùa hạ, lá số nóng và thiếu Thủy: cần Thủy để điều hòa khí hậu.' };
         ghiChuDieuHau = { e: eDH, thieu: true, text: dieuHau.text };
       } else {
-        ghiChuDieuHau = { e: eDH, thieu: false, text: 'Sinh ' + mua + ', lá số vẫn cần ' + H[eDH] + ' để ' + canh +
+        ghiChuDieuHau = { e: eDH, thieu: false, text: 'Sinh ' + mua + ', theo phép Điều hầu lá số vẫn cần ' + H[eDH] + ' để ' + canh +
           '. Hiện ' + H[eDH] + ' đạt ' + p[eDH] + '% nên khí hậu đã được điều hòa phần nào, không cần bổ sung gấp.' };
       }
     }
@@ -603,11 +603,12 @@
     // Hành điều hầu đang bị xếp vào phe bất lợi: nói rõ chỉ phần dư thừa mới xấu
     if (ghiChuDieuHau && !ghiChuDieuHau.thieu && (vai[ghiChuDieuHau.e] === 2 || vai[ghiChuDieuHau.e] === 3)) {
       ghiChuDieuHau.xungDot = true;
-      ghiChuDieuHau.text += ' Tuy vậy, ' + H[ghiChuDieuHau.e] + ' đang là ' + BT.VAI_TRO[vai[ghiChuDieuHau.e]] +
+      ghiChuDieuHau.text += ' Theo Phù ức, ' + H[ghiChuDieuHau.e] + ' đang là ' + BT.VAI_TRO[vai[ghiChuDieuHau.e]] +
         ': phần dư thừa mới bất lợi, còn một lượng vừa phải vẫn có ích cho khí hậu của lá số.';
     }
-    if (satNguong) satNguong.text = 'Kết luận sát ngưỡng: lá số nằm giữa vượng và nhược, đang nghiêng ' + satNguong.phia.replace('hơi ', '') +
-      ' nên Dụng thần là ' + H[D] + '. Nếu nghiêng ' + satNguong.phia2.replace('hơi ', '') + ', Dụng thần sẽ là ' + H[satNguong.D2] + '.';
+    if (satNguong) satNguong.text = 'Kết luận sát ngưỡng: phe nhật chủ (Tỷ Kiếp + Ấn) chiếm ' + satNguong.hoTro + '%, chỉ cách mốc 40% ' + satNguong.cach +
+      ' điểm. App đang xét lá số ' + satNguong.phia + ' nên chọn ' + H[D] + ' làm Dụng thần; nếu xét ' + satNguong.phia2 +
+      ', Dụng thần sẽ là ' + H[satNguong.D2] + '. Nên đối chiếu thêm việc nhật chủ có đắc lệnh, có gốc ở địa chi hay không và yếu tố Điều hầu trước khi kết luận.';
     return { D: D, P: P, vai: vai, ds: ds, lyDo: lyDo, dieuHau: dieuHau, ghiChuDieuHau: ghiChuDieuHau, bangDieuHau: bdh, satNguong: satNguong,
       tong: tong, lechTamDac: lechTamDac };
   };
